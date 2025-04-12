@@ -193,9 +193,21 @@ section {
     border-radius: 0px !important;
 }
 
-#sidebar-toggler-layout {
-    font-size: 1.5rem;
+#sidebar-toggler, #desktop-sidebar-toggler {
     cursor: pointer;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#desktop-sidebar-toggler {
+    font-size: 1.5rem;
+    margin-left: 10px;
+}
+
+#sidebar-toggler {
+    padding: 10px;
+    display: inline-block;
+    height: 40px;
+    width: 40px;
 }
 /* Mobile specific adjustments */
 @media (max-width: 767px) {
