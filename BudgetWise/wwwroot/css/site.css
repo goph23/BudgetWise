@@ -14,8 +14,8 @@ html {
 
 body {
     height: 100% !important;
-    background-color: #12161d;
-    color: #fff;
+    background-color: #0d1117; /* Darker, more refined background */
+    color: #f0f6fc; /* Slightly softer white for better readability */
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
@@ -32,7 +32,8 @@ text {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #fff;
+    color: #f0f6fc; /* Match body text color */
+    font-weight: 600; /* Slightly bolder headers */
 }
 
 @media (max-width: 767.98px) {
@@ -50,7 +51,8 @@ section {
 }
 
 .form-label {
-    color: #fff;
+    color: #c9d1d9; /* Softer white for form labels */
+    font-weight: 500; /* Slightly bolder */
 }
 
 /* App Logo */
@@ -90,15 +92,17 @@ section {
 }
 
 #menu .e-menu-item:hover {
-    background-color: rgba(101, 218, 65, 0.1);
+    background-color: rgba(88, 166, 255, 0.1); /* Subtle blue highlight on hover */
+    border-radius: 6px; /* Rounded corners for modern look */
 }
 
 #menu .e-menu-item a {
     width: 100% !important;
-    color: rgb(200, 200, 200);
+    color: #c9d1d9; /* Softer text color for better readability */
     font-weight: 400;
     box-sizing: border-box;
     height: 30px;
+    padding: 0 12px; /* Add some horizontal padding */
 }
 
 .e-anchor-wrap {
@@ -110,7 +114,7 @@ section {
 }
 
 #menu .e-menu-item .e-anchor-wrap span.e-menu-icon {
-    color: #65da41;
+    color: #58a6ff; /* Bright blue for icons - better contrast and modern look */
 }
 
 #menu .e-menu-item.e-separator {
@@ -118,9 +122,10 @@ section {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 14px;
-    color: #65da41;
+    color: #58a6ff; /* Match icon color */
     padding: 15px 10px 5px;
     margin-top: 10px;
+    letter-spacing: 0.5px; /* Better readability for headings */
 }
 
 #menu .e-menu-item.e-separator:not(:first-child) {
@@ -144,7 +149,7 @@ section {
     align-items: center;
     width: 30px;
     height: 30px;
-    color: #65da41;
+    color: #58a6ff; /* Match other icon colors */
 }
 
 /* Main Content & Sidebar */
@@ -170,24 +175,34 @@ section {
     position: fixed;
     width: 250px !important;
     top: 0;
-    left: 0;
+    left: -250px; /* Default positioning for desktop */
     height: 100vh;
-    background-color: #1a1e24;
+    background-color: #161b22; /* Slightly lighter than body for contrast */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    transform: translateX(-250px);
-    transition: transform 300ms ease-in-out;
+    transform: translateX(0); /* Initial transform */
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing for natural feel */
     z-index: 1030;
-    border-right: 2px solid rgba(75, 82, 85, 0.5);
+    border-right: 2px solid rgba(48, 54, 61, 0.8); /* More subtle border */
+    will-change: transform; /* Optimize for animations */
+    backface-visibility: hidden; /* Prevent flickering in some browsers */
 }
 
     #sidebar.e-open {
         transform: translateX(0);
     }
+    
+    #sidebar.transitioning {
+        visibility: visible !important; /* Prevent flickering during transition */
+        -webkit-transform: translate3d(0, 0, 0); /* Hardware acceleration for smoother transitions */
+        transform: translate3d(0, 0, 0);
+    }
 
 .e-sidebar.e-left.e-close {
-    visibility: visible;
-    transform: translateX(-250px);
+    visibility: visible !important;
+    transform: translateX(-250px) !important;
+    left: -250px !important;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) !important; /* Match sidebar transition */
 }
 
 /* Main content transitions */
@@ -198,8 +213,9 @@ section {
 #content-container {
     width: 100%;
     margin-left: 0;
-    transition: all 300ms ease-in-out;
-    will-change: transform;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Match sidebar transition timing */
+    will-change: transform, margin, width;
+    backface-visibility: hidden; /* Prevent flickering */
 }
 
 @media (min-width: 768px) {
@@ -218,19 +234,19 @@ section {
 
 /* Sidebar */
 #sidebar .e-menu-wrapper {
-    background-color: #1a1e24!important;
+    background-color: #161b22 !important; /* Match sidebar background */
 }
 
 #sidebar .e-content-template {
-    padding-top: 0;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-top: 8px;
+    padding-left: 12px;
+    padding-right: 12px;
     height: 100% !important;
 }
 
 .e-menu-wrapper, .e-menu-container {
     border-radius: 0px !important;
-    background-color: #1a1e24 !important;
+    background-color: #161b22 !important; /* Match sidebar background */
 }
 
 #sidebar-toggler, #desktop-sidebar-toggler {
@@ -269,10 +285,29 @@ section {
     }
 }
 
+/* Backdrop for mobile sidebar - disabled */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent;
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1; /* Move it below everything */
+}
+
+body.sidebar-open .sidebar-backdrop {
+    opacity: 0;
+    visibility: hidden;
+}
+
 /* Desktop */
 @media (min-width: 768px) {
     #sidebar {
-        left: 0;
+        left: -250px; /* Start off-screen */
         width: 250px !important;
         background-color: #1a1e24;
         -ms-overflow-style: none; /* IE and Edge */
@@ -285,12 +320,14 @@ section {
     }
 
     .e-sidebar.e-left.e-close {
-        visibility: visible;
+        visibility: visible !important;
         transform: translateX(-250px) !important; /* Force it to be hidden when closed */
+        left: -250px !important; /* Ensure it stays off-screen when closed */
     }
 
     .e-sidebar.e-left.e-open {
         transform: translateX(0) !important; /* Show when explicitly opened */
+        left: 0 !important; /* Move to visible position when open */
     }
 
     /* For desktop, use a simpler approach with margins */
@@ -319,20 +356,40 @@ section {
         position: fixed;
         height: calc(100vh - 56px);
         top: 56px;
+        width: 100% !important; /* Full width on mobile */
+        left: -100% !important; /* Ensure it's off-screen when closed */
         z-index: 1029;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         transform: translateX(-100%); /* Start off-screen */
-        transition: transform 0.3s ease;
+        transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Match desktop transition */
+        visibility: hidden; /* Initially hidden on mobile */
     }
 
     .e-sidebar.e-left.e-close {
-        visibility: visible;
+        visibility: visible !important;
         transform: translateX(-100%) !important; /* Force it to be hidden when closed */
+        left: -100% !important; /* Ensure it stays off-screen when closed */
+        width: 100% !important; /* Full width on mobile */
     }
 
     .e-sidebar.e-left.e-open {
         transform: translateX(0) !important; /* Show when explicitly opened */
+        left: 0 !important; /* Move to visible position when open */
+        width: 100% !important; /* Full width on mobile when open */
+        visibility: visible !important; /* Ensure visibility */
     }
+    
+    /* Force sidebar to be visible when open on mobile */
+    body.sidebar-open #sidebar,
+    body.sidebar-open .mobile-sidebar,
+    body.sidebar-open .e-sidebar {
+        transform: translateX(0) !important;
+        left: 0 !important;
+        width: 100% !important;
+        visibility: visible !important;
+        z-index: 1029 !important;
+    }
+    
     #menu {
         padding-top: 20px !important;
     }
@@ -344,7 +401,8 @@ nav.navbar {
     top: 0;
     right: 0;
     left: 0;
-    background-color: #222b33;
+    background-color: #21262d; /* Updated navbar color for better hierarchy */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     width: 100% !important;
     z-index: 1030; /* Ensure navbar is above other elements */
 }
@@ -464,17 +522,19 @@ img.profile-pic {
 
 /* Widgets */
 .widget {
-    border-radius: 0.5rem;
-    background-color: #1a222b;
+    border-radius: 0.75rem;
+    background-color: #1c2128; /* Slightly lighter than body background */
+    border: 1px solid rgba(48, 54, 61, 0.5); /* Subtle border */
     width: 100%;
     height: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 .widget.summary > div:first-child {
-    background-color: #222b33;
-    padding: 1rem;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
+    background-color: #21262d; /* Slightly darker than the widget */
+    padding: 1.25rem;
+    border-top-left-radius: 0.75rem;
+    border-bottom-left-radius: 0.75rem;
 }
 
 .widget.summary > div:first-child i {
@@ -482,15 +542,15 @@ img.profile-pic {
 }
 
 .widget.income > div:first-child {
-    color: #65da41;
+    color: #238636; /* GitHub-style green */
 }
 
 .widget.expense > div:first-child {
-    color: #ff4e48;
+    color: #f85149; /* GitHub-style red */
 }
 
 .widget.balance > div:first-child {
-    color: #2aa1ff;
+    color: #58a6ff; /* Match other accent colors */
 }
 
 .widget.chart {
@@ -856,21 +916,23 @@ footer {
 }
 
 a {
-    color: #65da41;
+    color: #58a6ff; /* Match other accent colors */
+    text-decoration: none;
 }
 
 .custom-button-color {
-    background-color: #65da41;
-    color: black;
+    background-color: #238636; /* GitHub-style green button */
+    color: white;
+    border: none;
 }
 
 .custom-button-color:hover {
-    background-color: #4ba130;
-    color: black;
+    background-color: #2ea043; /* Lighter on hover */
+    color: white;
 }
 
 .card-header .nav-item .nav-link {
-    color: #65da41;
+    color: #58a6ff; /* Match other accent colors */
 }
 
 /* Make sidebar and parent elements consistent */
@@ -878,9 +940,52 @@ a {
 .e-control.e-sidebar.e-lib.e-left.e-transition,
 .e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
 .e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push {
-    background-color: #1a1e24 !important;
-    border-right: 2px solid rgba(75, 82, 85, 0.5) !important;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+    background-color: #161b22 !important; /* Match sidebar background */
+    border-right: 1px solid rgba(48, 54, 61, 0.8) !important; /* Subtle border */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2) !important; /* Softer shadow */
+}
+
+/* Additional mobile sidebar styling */
+@media (max-width: 767px) {
+    .e-control.e-sidebar.e-lib.e-left,
+    .e-control.e-sidebar.e-lib.e-left.e-transition,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push,
+    .mobile-sidebar,
+    #sidebar {
+        width: 100% !important; /* Full width on mobile */
+    }
+    
+    /* On mobile, ensure the sidebar is visible when open */
+    .e-sidebar.e-open {
+        visibility: visible !important;
+        transform: translateX(0) !important;
+        left: 0 !important;
+        width: 100% !important;
+        position: fixed !important;
+    }
+    
+    /* For mobile, make the sidebar overlay content instead of pushing it */
+    body.sidebar-open .main-content,
+    body.sidebar-open .main-content-logged-in,
+    body.sidebar-open #outer-container,
+    body.sidebar-open #main-container,
+    body.sidebar-open #content-container {
+        margin-left: 0 !important; /* Don't move content when sidebar opens */
+        transform: none !important; /* Prevent content squeeze */
+        width: 100% !important;
+        max-width: 100% !important;
+        transition: none !important; /* Disable transitions for content on mobile */
+    }
+    
+    /* Change on all levels to ensure nothing moves */
+    .main-content,
+    .main-content-logged-in,
+    #outer-container,
+    #main-container,
+    #content-container {
+        transition: none !important; /* Disable all transitions on mobile */
+    }
 }
 
 /* Mobile sidebar full height */
