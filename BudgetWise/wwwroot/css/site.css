@@ -18,6 +18,12 @@ body {
     color: #fff;
     overflow-x: hidden;
     overflow-y: auto;
+    position: relative;
+    width: 100%;
+}
+
+body.sidebar-open {
+    overflow-x: hidden;
 }
 
 
@@ -75,16 +81,22 @@ section {
 
 #menu .e-menu-item:not(.e-separator) {
     height: 100% !important;
+    padding: 5px 0;
 }
 
 #menu .e-menu-item {
     box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+#menu .e-menu-item:hover {
+    background-color: rgba(101, 218, 65, 0.1);
 }
 
 #menu .e-menu-item a {
     width: 100% !important;
-    color: rgb(171, 163, 152);
-    font-weight: 300;
+    color: rgb(200, 200, 200);
+    font-weight: 400;
     box-sizing: border-box;
     height: 30px;
 }
@@ -98,15 +110,17 @@ section {
 }
 
 #menu .e-menu-item .e-anchor-wrap span.e-menu-icon {
-    color: rgb(171, 163, 152);
+    color: #65da41;
 }
 
 #menu .e-menu-item.e-separator {
     border: none;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 14px;
     color: #65da41;
+    padding: 15px 10px 5px;
+    margin-top: 10px;
 }
 
 #menu .e-menu-item.e-separator:not(:first-child) {
@@ -123,18 +137,22 @@ section {
 }
 
 .e-menu-icon {
-    margin-right: 10px !important;
+    margin-right: 12px !important;
     font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 30px;
     height: 30px;
+    color: #65da41;
 }
 
 /* Main Content & Sidebar */
 .main-container {
     display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1320px; /* Bootstrap container-xxl max-width */
 }
 
 .main-content {
@@ -143,7 +161,7 @@ section {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    transition: margin-left 0.3s ease;
+    transition: transform 300ms ease-in-out;
     flex: 1;
 }
 
@@ -154,13 +172,13 @@ section {
     top: 0;
     left: 0;
     height: 100vh;
-    background-color: #12161d;
+    background-color: #1a1e24;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    transform: translateX(-200px);
-    transition: transform 0.3s ease;
+    transform: translateX(-250px);
+    transition: transform 300ms ease-in-out;
     z-index: 1030;
-    border-right: 2px solid rgba(75, 82, 85, 0.24);
+    border-right: 2px solid rgba(75, 82, 85, 0.5);
 }
 
     #sidebar.e-open {
@@ -169,28 +187,50 @@ section {
 
 .e-sidebar.e-left.e-close {
     visibility: visible;
-    transform: translateX(-200px);
+    transform: translateX(-250px);
 }
 
-/* Main content should always be full width */
+/* Main content transitions */
 .main-content,
-.main-content-logged-in {
+.main-content-logged-in,
+#outer-container,
+#main-container,
+#content-container {
     width: 100%;
     margin-left: 0;
-    transition: none;
+    transition: all 300ms ease-in-out;
+    will-change: transform;
+}
+
+@media (min-width: 768px) {
+    /* Center the container when sidebar is closed */
+    #outer-container,
+    #main-container,
+    #content-container {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1320px; /* Bootstrap container-xxl max-width */
+        transition: all 300ms ease-in-out;
+    }
+}
+    
 }
 
 /* Sidebar */
 #sidebar .e-menu-wrapper {
-    background-color: #12161d;
+    background-color: #1a1e24!important;
 }
 
 #sidebar .e-content-template {
-    padding-top: 56px;
+    padding-top: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 100% !important;
 }
 
 .e-menu-wrapper, .e-menu-container {
     border-radius: 0px !important;
+    background-color: #1a1e24 !important;
 }
 
 #sidebar-toggler, #desktop-sidebar-toggler {
@@ -214,54 +254,63 @@ section {
     #sidebar {
         height: calc(100vh - 56px);
         top: 56px;
-        width: 100% !important; /* Make sidebar full width on mobile */
+        width: 100% !important; /* Full width on mobile */
         transform: translateX(-100%); /* Start off-screen */
+        z-index: 1029;
     }
     
     #sidebar.e-open {
         transform: translateX(0); /* Show when open */
+    }
+    
+    /* Hide content overflow when sidebar is open */
+    body.sidebar-open {
+        overflow-x: hidden;
     }
 }
 
 /* Desktop */
 @media (min-width: 768px) {
     #sidebar {
-        top: 0;
         left: 0;
-        height: 100vh;
-        background-color: #12161d;
+        width: 250px !important;
+        background-color: #1a1e24;
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
-        transform: translateX(-200px); /* Always start collapsed */
-        transition: transform 0.3s ease;
+        transform: translateX(-250px); /* Always start collapsed */
+        transition: transform 300ms ease-in-out;
         z-index: 1000;
         position: fixed; /* Keep it fixed */
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     }
 
     .e-sidebar.e-left.e-close {
         visibility: visible;
-        transform: translateX(-200px) !important; /* Force it to be hidden when closed */
+        transform: translateX(-250px) !important; /* Force it to be hidden when closed */
     }
 
     .e-sidebar.e-left.e-open {
         transform: translateX(0) !important; /* Show when explicitly opened */
     }
 
+    /* For desktop, use a simpler approach with margins */
     .main-content,
     .main-content-logged-in {
-        width: 100%; /* Always start at full width */
-        margin-left: 0; /* Always start with no margin */
-        transition: margin-left 0.3s ease, width 0.3s ease;
+        width: 100%;
+        max-width: 1320px; /* Bootstrap container-xxl max-width */
+        margin-left: auto;
+        margin-right: auto;
+        transition: margin 300ms ease-in-out;
     }
 
+    /* When sidebar is open, adjust the position of main content */
     body.sidebar-open .main-content,
     body.sidebar-open .main-content-logged-in {
-        margin-left: 200px;
-        width: calc(100% - 200px);
+        margin-left: 250px;
+        margin-right: auto;
+        max-width: 1070px; /* Fixed value instead of calculation: 1320px - 250px */
     }
-    #menu {
-        padding-top: 80px !important;
-    }
+
 }
 
 /* Mobile */
@@ -298,6 +347,13 @@ nav.navbar {
     background-color: #222b33;
     width: 100% !important;
     z-index: 1030; /* Ensure navbar is above other elements */
+}
+
+/* Center navbar content */
+nav.navbar .container {
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -604,6 +660,7 @@ a.btn-custom {
 .e-content {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+    height: 100% !important;
 }
 
 .e-content::-webkit-scrollbar {
@@ -814,4 +871,36 @@ a {
 
 .card-header .nav-item .nav-link {
     color: #65da41;
+}
+
+/* Make sidebar and parent elements consistent */
+.e-control.e-sidebar.e-lib.e-left,
+.e-control.e-sidebar.e-lib.e-left.e-transition,
+.e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
+.e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push {
+    background-color: #1a1e24 !important;
+    border-right: 2px solid rgba(75, 82, 85, 0.5) !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Mobile sidebar full height */
+@media (max-width: 767px) {
+    .e-control.e-sidebar.e-lib.e-left,
+    .e-control.e-sidebar.e-lib.e-left.e-transition,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push {
+        height: 100vh !important;
+    }
+}
+
+/* Desktop sidebar matches main content */
+@media (min-width: 768px) {
+    .e-control.e-sidebar.e-lib.e-left,
+    .e-control.e-sidebar.e-lib.e-left.e-transition,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
+    .e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push {
+        height: calc(100% - 56px) !important;
+        top: 56px !important;
+        margin-top: 0 !important;
+    }
 }

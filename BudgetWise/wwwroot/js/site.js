@@ -3,6 +3,7 @@
 
 // Initialize all components
 document.addEventListener('DOMContentLoaded', function () {
+    
     // Bootstrap initialization for navbar toggler
     var navbarToggler = document.getElementById('navbar-toggler');
     var navbarCollapse = document.getElementById('navbarNav');
@@ -30,11 +31,21 @@ document.addEventListener('DOMContentLoaded', function () {
             var sidebarObj = sidebar.ej2_instances[0];
             
             if (sidebarObj.isOpen) {
-                sidebarObj.hide();
+                // Remove the class which triggers the CSS transition
                 document.body.classList.remove('sidebar-open');
+                
+                // Then hide the sidebar with a slight delay to let CSS transition finish
+                setTimeout(function() {
+                    sidebarObj.hide();
+                }, 50);
             } else {
+                // First show the sidebar
                 sidebarObj.show();
-                document.body.classList.add('sidebar-open');
+                
+                // Then add the class to trigger CSS transitions
+                setTimeout(function() {
+                    document.body.classList.add('sidebar-open');
+                }, 50);
             }
         }
     }

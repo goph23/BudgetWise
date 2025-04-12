@@ -6,6 +6,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Syncfusion.Blazor;
 using BudgetWise.Data;
+using BudgetWise.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,16 @@ void ConfigureServices(IServiceCollection services, IConfiguration configuration
     // Core Services
     services.AddMemoryCache();
     services.AddLogging();
+
+    services.AddScoped<IDashboardService, UserDashboardService>(sp => {
+        var context = sp.GetRequiredService<ApplicationDbContext>();
+        var userManager = sp.GetRequiredService<UserManager<ApplicationUser>>();
+        var httpContext = sp.GetRequiredService<IHttpContextAccessor>();
+        var userId = userManager.GetUserId(httpContext.HttpContext?.User);
+        return new UserDashboardService(context, userManager, userId ?? string.Empty);
+    });
+    services.AddTransient<DemoDashboardService>();
+    services.AddHttpContextAccessor();
 
     // Cookie Policy Configuration
     services.Configure<CookiePolicyOptions>(options =>
@@ -132,4 +143,9 @@ void ConfigureApp(WebApplication app)
         defaults: new { controller = "Transaction" });
 
     app.MapRazorPages();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+    }
 }

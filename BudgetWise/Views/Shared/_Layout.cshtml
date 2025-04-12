@@ -33,7 +33,7 @@
 </head>
 <body class="e-bigger">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center ms-2" href="/">
                 <img src="~/favicon-32x32.png" alt="Logo" class="logo-img navbar-icon" />
@@ -69,14 +69,14 @@
         </div>
     </nav>
     
-    <div class="container">
-        <div class="main-container pb-3">
+    <div class="container-fluid px-0" id="outer-container">
+        <div class="main-container pb-3" id="main-container">
         @if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
         {
             <partial name="_SideBar.cshtml" />
         }
-        <div class="main-content @((User is not null && User.Identity is not null && User.Identity.IsAuthenticated) ? "main-content-logged-in" : "")">
-            <div class="container mt-3">
+        <div class="main-content @((User is not null && User.Identity is not null && User.Identity.IsAuthenticated) ? "main-content-logged-in" : "")" id="main-content">
+            <div class="container ">
                 <div class="row justify-content-center">
                     <main role="main" class="pb-3">
                         @if (ViewData["isDashboard"] == null || ViewContext.RouteData.Values["controller"]?.ToString() == "DemoDashboard")

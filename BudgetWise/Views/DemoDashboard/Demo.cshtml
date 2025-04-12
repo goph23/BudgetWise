@@ -1,16 +1,22 @@
 ﻿@using Syncfusion.EJ2.Maps;
 @using Syncfusion.EJ2.HeatMap;
-@using BudgetWise.Controllers;
+@using BudgetWise.Models;
 @{
-    ViewData["isDashboard"] = null;
-    ViewData["PageTitle"] = "Demonstration - Register/Login to Visualize your Finances";
-
     var treemapData = ViewBag.TreemapData as IEnumerable<object>;
     var barChartData = ViewBag.BarChartData as IEnumerable<BarChartData>;
     var stackedColumnChartData = ViewBag.StackedColumnChartData as IEnumerable<dynamic>;
     var bubbleChartData = ViewBag.BubbleChartData as IEnumerable<BubbleChartData>;
     var monthlyTrendChartData = ViewBag.MonthlyTrendChartData as IEnumerable<MonthlyTrendData>;
     var stackedAreaChartData = ViewBag.StackedAreaChartData as IEnumerable<dynamic>;
+    
+    bool isAuthenticated = ViewData["isAuthenticated"] != null && (bool)ViewData["isAuthenticated"];
+}
+
+@if (isAuthenticated)
+{
+    <div class="alert alert-info">
+        <strong>You're logged in!</strong> This is a demo dashboard with sample data. Visit your <a href="@Url.Action("Index", "Dashboard")" class="alert-link">personal dashboard</a> to see your actual data.
+    </div>
 }
 
 <div class="row mb-0">
