@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (sidebar && sidebar.ej2_instances && sidebar.ej2_instances[0]) {
             var sidebarObj = sidebar.ej2_instances[0];
             var isMobile = window.innerWidth <= 768;
-            var transformValue = isMobile ? '-100%' : '-250px';
+            var transformValue = isMobile ? '-100%' : '0px';
             
             if (sidebarObj.isOpen) {
                 // Mark sidebar as transitioning

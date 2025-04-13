@@ -125,7 +125,7 @@ void ConfigureApp(WebApplication app)
     // Route Configuration
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=DemoDashboard}/{action=Demo}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.MapControllerRoute(
         name: "dashboard",
@@ -141,6 +141,11 @@ void ConfigureApp(WebApplication app)
         name: "transaction",
         pattern: "Transaction/{action=Index}/{id?}",
         defaults: new { controller = "Transaction" });
+        
+    app.MapControllerRoute(
+        name: "demodasboard",
+        pattern: "DemoDashboard/{action=Demo}/{id?}",
+        defaults: new { controller = "DemoDashboard" });
 
     app.MapRazorPages();
     using (var scope = app.Services.CreateScope())

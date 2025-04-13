@@ -24,7 +24,7 @@ namespace BudgetWise.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "DemoDashboard");
+                return RedirectToAction("Demo", "DemoDashboard");
             }
         }
 

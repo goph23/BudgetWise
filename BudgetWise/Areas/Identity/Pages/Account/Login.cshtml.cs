@@ -120,7 +120,8 @@ namespace BudgetWise.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    // Always redirect to the Dashboard after successful login
+                    return Redirect("/Dashboard/Index");
                 }
                 if (result.RequiresTwoFactor)
                 {

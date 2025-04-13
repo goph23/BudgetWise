@@ -34,7 +34,7 @@
 <body class="e-bigger">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center ms-2" href="/">
                 <img src="~/favicon-32x32.png" alt="Logo" class="logo-img navbar-icon" />
                 <span class="logo-text ms-2 d-none d-lg-block">BudgetWise</span>
@@ -69,14 +69,14 @@
         </div>
     </nav>
     
-    <div class="container-fluid px-0" id="outer-container">
+    <div class="container px-0" id="outer-container">
         <div class="main-container pb-3" id="main-container">
         @if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
         {
             <partial name="_SideBar.cshtml" />
         }
         <div class="main-content @((User is not null && User.Identity is not null && User.Identity.IsAuthenticated) ? "main-content-logged-in" : "")" id="main-content">
-            <div class="container ">
+            <div class="container mt-2 main-content-body">
                 <div class="row justify-content-center">
                     <main role="main" class="pb-3">
                         @if (ViewData["isDashboard"] == null || ViewContext.RouteData.Values["controller"]?.ToString() == "DemoDashboard")
@@ -84,7 +84,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="d-flex flex-column">
-                                        <div class="d-flex mb-1">
+                                        <div class="d-flex">
                                             <div class="d-flex d-block w-100 justify-content-between align-items-center">
                                                 @* <h3 class="fw-bold my-0 pt-3 pb-3">@ViewData["PageTitle"]</h3> *@
                                                 <div class="">
@@ -101,7 +101,7 @@
                                         @* Breadcrumb rendering *@
                                         @if (ViewContext.RouteData.Values["controller"]?.ToString() != "DemoDashboard")
                                         {
-                                            <ejs-breadcrumb id="breadcrumb" separatorTemplate="@Html.Raw("<span class='fa-solid fa-angle-right'></span>")" enableNavigation="false"></ejs-breadcrumb>
+                                            <ejs-breadcrumb id="breadcrumb" class="mt-3 mb-3" separatorTemplate="@Html.Raw("<span class='fa-solid fa-angle-right'></span>")" enableNavigation="false"></ejs-breadcrumb>
                                         }
                                     </div>
                                 </div>

@@ -9,6 +9,15 @@
     var bubbleChartData = ViewBag.BubbleChartData as IEnumerable<BubbleChartData>;
     var monthlyTrendChartData = ViewBag.MonthlyTrendChartData as IEnumerable<MonthlyTrendData>;
     var stackedAreaChartData = ViewBag.StackedAreaChartData as IEnumerable<dynamic>;
+
+    bool isAuthenticated = ViewData["isAuthenticated"] != null && (bool)ViewData["isAuthenticated"];
+}
+
+@if (isAuthenticated)
+{
+    <div class="alert alert-info">
+        <strong>You're logged in!</strong> This is a demo dashboard with sample data. Visit your <a href="@Url.Action("Index", "Dashboard")" class="alert-link">personal dashboard</a> to see your actual data.
+    </div>
 }
 
 <div class="row mb-0">

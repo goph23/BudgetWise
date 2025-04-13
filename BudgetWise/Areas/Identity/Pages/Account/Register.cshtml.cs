@@ -161,7 +161,8 @@ namespace BudgetWise.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        // Always redirect to the Dashboard after successful registration
+                        return Redirect("/Dashboard/Index");
                     }
                 }
                 foreach (var error in result.Errors)

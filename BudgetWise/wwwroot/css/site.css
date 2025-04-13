@@ -1,6 +1,6 @@
 /* Global styles */
 html {
-    font-size: 14px;
+    font-size: 16px;
     position: relative;
     min-height: 100%;
     font-family: "Inter";
@@ -12,14 +12,21 @@ html {
     }
 }
 
+html, body {
+    height: 100vh !important;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    height: 100% !important;
-    background-color: #0d1117; /* Darker, more refined background */
+    background-color: #161b22; /* Match sidebar color */
     color: #f0f6fc; /* Slightly softer white for better readability */
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body.sidebar-open {
@@ -114,7 +121,7 @@ section {
 }
 
 #menu .e-menu-item .e-anchor-wrap span.e-menu-icon {
-    color: #58a6ff; /* Bright blue for icons - better contrast and modern look */
+    color: #65da41; /* Green for icons */
 }
 
 #menu .e-menu-item.e-separator {
@@ -122,7 +129,7 @@ section {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 14px;
-    color: #58a6ff; /* Match icon color */
+    color: #65da41; /* Match icon color */
     padding: 15px 10px 5px;
     margin-top: 10px;
     letter-spacing: 0.5px; /* Better readability for headings */
@@ -149,15 +156,18 @@ section {
     align-items: center;
     width: 30px;
     height: 30px;
-    color: #58a6ff; /* Match other icon colors */
+    color: #65da41; /* Green for icons */
 }
 
 /* Main Content & Sidebar */
 .main-container {
     display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 1320px; /* Bootstrap container-xxl max-width */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%; /* Full width */
+    min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
+    flex: 1;
 }
 
 .main-content {
@@ -165,19 +175,21 @@ section {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    transition: transform 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
     flex: 1;
+    min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
+    width: 100%; /* Ensure full width */
+    max-width: 100%; /* Ensure no max-width constraints */
 }
 
 /* Sidebar overlay behavior */
 #sidebar {
     position: fixed;
     width: 250px !important;
-    top: 0;
+    top: 56px; /* Start below navbar height */
     left: -250px; /* Default positioning for desktop */
-    height: 100vh;
-    background-color: #161b22; /* Slightly lighter than body for contrast */
+    height: calc(100vh - 56px); /* Full viewport height minus navbar height */
+    background-color: #161b22; /* Match body background color */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
     transform: translateX(0); /* Initial transform */
@@ -208,14 +220,35 @@ section {
 /* Main content transitions */
 .main-content,
 .main-content-logged-in,
-#outer-container,
-#main-container,
 #content-container {
     width: 100%;
     margin-left: 0;
     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Match sidebar transition timing */
     will-change: transform, margin, width;
     backface-visibility: hidden; /* Prevent flickering */
+    min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
+}
+
+#outer-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
+    background-color: #161b22; /* Match body background */
+}
+
+#main-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    display: flex;
+    min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
 }
 
 @media (min-width: 768px) {
@@ -225,7 +258,6 @@ section {
     #content-container {
         margin-left: auto;
         margin-right: auto;
-        max-width: 1320px; /* Bootstrap container-xxl max-width */
         transition: all 300ms ease-in-out;
     }
 }
@@ -242,6 +274,7 @@ section {
     padding-left: 12px;
     padding-right: 12px;
     height: 100% !important;
+    overflow-y: auto; /* Enable scrolling if content is too long */
 }
 
 .e-menu-wrapper, .e-menu-container {
@@ -268,8 +301,8 @@ section {
 /* Mobile specific adjustments */
 @media (max-width: 767px) {
     #sidebar {
-        height: calc(100vh - 56px);
-        top: 56px;
+        height: calc(100vh - 56px); /* Consistent height on mobile */
+        top: 56px; /* Start below navbar */
         width: 100% !important; /* Full width on mobile */
         transform: translateX(-100%); /* Start off-screen */
         z-index: 1029;
@@ -309,13 +342,15 @@ body.sidebar-open .sidebar-backdrop {
     #sidebar {
         left: -250px; /* Start off-screen */
         width: 250px !important;
-        background-color: #1a1e24;
+        background-color: #161b22; /* Match body background color */
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
         transform: translateX(-250px); /* Always start collapsed */
         transition: transform 300ms ease-in-out;
         z-index: 1000;
         position: fixed; /* Keep it fixed */
+        top: 56px; /* Start below navbar */
+        height: calc(100vh - 56px); /* Full viewport height minus navbar height */
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     }
 
@@ -330,22 +365,26 @@ body.sidebar-open .sidebar-backdrop {
         left: 0 !important; /* Move to visible position when open */
     }
 
-    /* For desktop, use a simpler approach with margins */
+    /* For desktop, use a simpler approach with padding */
     .main-content,
     .main-content-logged-in {
         width: 100%;
-        max-width: 1320px; /* Bootstrap container-xxl max-width */
-        margin-left: auto;
-        margin-right: auto;
-        transition: margin 300ms ease-in-out;
+        max-width: 100%; /* Full width */
+        margin-left: 0;
+        margin-right: 0;
+        transition: all 300ms ease-in-out;
+        padding-left: 0; /* Start with no padding */
+        padding-right: 0;
     }
 
     /* When sidebar is open, adjust the position of main content */
     body.sidebar-open .main-content,
     body.sidebar-open .main-content-logged-in {
-        margin-left: 250px;
-        margin-right: auto;
-        max-width: 1070px; /* Fixed value instead of calculation: 1320px - 250px */
+        margin-left: 250px; /* Match the sidebar width exactly */
+        margin-right: 0;
+        width: calc(100% - 250px); /* Subtract sidebar width from total width */
+        max-width: none; /* Remove any max-width constraints */
+        transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
     }
 
 }
@@ -405,6 +444,7 @@ nav.navbar {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
     width: 100% !important;
     z-index: 1030; /* Ensure navbar is above other elements */
+    height: 56px; /* Fixed height for navbar */
 }
 
 /* Center navbar content */
@@ -412,6 +452,24 @@ nav.navbar .container {
     max-width: 1320px;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* Main content body container */
+.main-content-body {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Adjust main content body when sidebar is open */
+@media (min-width: 768px) {
+    body.sidebar-open .main-content-body {
+        padding-left: 15px; /* Standard padding */
+        padding-right: 15px; /* Standard padding */
+        width: 100%; /* Full width within its parent */
+        max-width: 100%;
+    }
 }
 
 
@@ -853,6 +911,8 @@ footer {
     margin-top: auto;
 }
 
+
+
 *:not(.fa-solid):not(.fa):not(.e-icons) {
     font-family: "Inter";
 }
@@ -943,6 +1003,8 @@ a {
     background-color: #161b22 !important; /* Match sidebar background */
     border-right: 1px solid rgba(48, 54, 61, 0.8) !important; /* Subtle border */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2) !important; /* Softer shadow */
+    height: calc(100vh - 56px) !important; /* Full viewport height minus navbar */
+    top: 56px !important; /* Start below navbar */
 }
 
 /* Additional mobile sidebar styling */
@@ -994,7 +1056,8 @@ a {
     .e-control.e-sidebar.e-lib.e-left.e-transition,
     .e-control.e-sidebar.e-lib.e-left.e-transition.e-open,
     .e-control.e-sidebar.e-lib.e-left.e-transition.e-open.e-push {
-        height: 100vh !important;
+        height: calc(100vh - 56px) !important;
+        top: 56px !important;
     }
 }
 

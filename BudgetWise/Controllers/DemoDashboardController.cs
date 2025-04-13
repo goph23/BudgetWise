@@ -27,12 +27,8 @@ namespace BudgetWise.Controllers
             ViewData["isDashboard"] = null;
             ViewData["PageTitle"] = "Demonstration - Register/Login to Visualize your Finances";
             
-            if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
-            {
-                // Even though the user is authenticated, don't redirect them
-                // Just show the demo with a message indicating their login status
-                ViewData["isAuthenticated"] = true;
-            }
+            // Explicitly set isAuthenticated based on user status
+            ViewData["isAuthenticated"] = User is not null && User.Identity is not null && User.Identity.IsAuthenticated;
 
             IDashboardService dashboardService = new DemoDashboardService();
             await PopulateDashboardData(dashboardService);
