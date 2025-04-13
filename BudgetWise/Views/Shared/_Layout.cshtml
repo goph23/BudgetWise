@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark" class="@(User is not null && User.Identity is not null && User.Identity.IsAuthenticated ? "sidebar-open-desktop desktop-view" : "")">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -31,7 +31,7 @@
     </script>
 
 </head>
-<body class="e-bigger">
+<body class="e-bigger @(User is not null && User.Identity is not null && User.Identity.IsAuthenticated ? "sidebar-open-desktop" : "")">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">

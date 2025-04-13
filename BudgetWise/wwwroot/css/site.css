@@ -187,17 +187,49 @@ section {
     position: fixed;
     width: 250px !important;
     top: 56px; /* Start below navbar height */
-    left: -250px; /* Default positioning for desktop */
     height: calc(100vh - 56px); /* Full viewport height minus navbar height */
     background-color: #161b22; /* Match body background color */
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    transform: translateX(0); /* Initial transform */
-    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing for natural feel */
     z-index: 1030;
     border-right: 2px solid rgba(48, 54, 61, 0.8); /* More subtle border */
     will-change: transform; /* Optimize for animations */
     backface-visibility: hidden; /* Prevent flickering in some browsers */
+}
+
+/* Apply transitions only when toggling, not on page load */
+.sidebar-toggling #sidebar {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing for natural feel */
+}
+
+/* Default state (closed) */
+#sidebar:not(.e-open) {
+    left: -250px; 
+    transform: translateX(0);
+}
+
+/* Open state */
+.sidebar-open #sidebar, 
+.sidebar-open-desktop #sidebar,
+#sidebar.e-open {
+    left: 0 !important;
+    transform: translateX(0) !important;
+}
+
+/* Responsive sidebar state classes */
+@media (min-width: 768px) {
+    .sidebar-open-desktop #sidebar {
+        left: 0 !important;
+        transform: translateX(0) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .sidebar-open-desktop #sidebar {
+        left: -100% !important;
+        transform: translateX(-100%) !important;
+        visibility: hidden !important;
+    }
 }
 
     #sidebar.e-open {
@@ -217,16 +249,28 @@ section {
     transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) !important; /* Match sidebar transition */
 }
 
-/* Main content transitions */
+/* Main content */
 .main-content,
 .main-content-logged-in,
 #content-container {
     width: 100%;
     margin-left: 0;
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Match sidebar transition timing */
     will-change: transform, margin, width;
     backface-visibility: hidden; /* Prevent flickering */
     min-height: calc(100vh - 56px); /* Full viewport height minus navbar */
+}
+
+/* Apply transitions only when toggling, not on page load */
+.sidebar-toggling .main-content,
+.sidebar-toggling .main-content-logged-in,
+.sidebar-toggling #content-container {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); /* Match sidebar transition timing */
+}
+
+/* Initial state without transitions - applied by JavaScript */
+.no-transition, 
+.no-transition * {
+    transition: none !important;
 }
 
 #outer-container {
@@ -376,13 +420,26 @@ body.sidebar-open .sidebar-backdrop {
         padding-left: 0; /* Start with no padding */
         padding-right: 0;
     }
+    
+    /* Initial state for desktop - sidebar visible by default */
+    html.desktop-view .main-content,
+    html.desktop-view .main-content-logged-in {
+        margin-left: 0;
+    }
 
     /* When sidebar is open, adjust the position of main content */
+    html.sidebar-open .main-content,
+    html.sidebar-open .main-content-logged-in,
     body.sidebar-open .main-content,
-    body.sidebar-open .main-content-logged-in {
-        margin-left: 250px; /* Match the sidebar width exactly */
+    body.sidebar-open .main-content-logged-in,
+    html.sidebar-open-desktop .main-content,
+    html.sidebar-open-desktop .main-content-logged-in,
+    body.sidebar-open-desktop .main-content,
+    body.sidebar-open-desktop .main-content-logged-in {
+        margin-left: 250px !important; /* Match the sidebar width exactly */
         margin-right: 0;
-        width: calc(100% - 250px); /* Subtract sidebar width from total width */
+        width: calc(100% - 250px) !important; /* Subtract sidebar width from total width */
+    }
         max-width: none; /* Remove any max-width constraints */
         transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
     }
