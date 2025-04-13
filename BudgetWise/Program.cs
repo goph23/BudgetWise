@@ -106,21 +106,21 @@ void ConfigureApp(WebApplication app)
     app.UseCookiePolicy();
 
     // Middleware to handle domain redirection
-    app.Use(async (context, next) =>
-    {
-        var request = context.Request;
-        var host = request.Host.ToString();
-        // Redirect from Azure domain to custom domain
-        if (host == "budgetwise-app-ardnf9gefuafb5e0.canadaeast-01.azurewebsites.net")
-        {
-            var newUrl = $"https://www.budget-wise.net{request.Path}{request.QueryString}";
-            context.Response.Redirect(newUrl);
-        }
-        else
-        {
-            await next();
-        }
-    });
+    // app.Use(async (context, next) =>
+    // {
+    //     var request = context.Request;
+    //     var host = request.Host.ToString();
+    //     // Redirect from Azure domain to custom domain
+    //     if (host == "budgetwise-app-ardnf9gefuafb5e0.canadaeast-01.azurewebsites.net")
+    //     {
+    //         var newUrl = $"https://www.budget-wise.net{request.Path}{request.QueryString}";
+    //         context.Response.Redirect(newUrl);
+    //     }
+    //     else
+    //     {
+    //         await next();
+    //     }
+    // });
 
     // Route Configuration
     app.MapControllerRoute(
