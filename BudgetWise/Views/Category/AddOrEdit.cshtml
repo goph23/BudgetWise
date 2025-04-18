@@ -6,12 +6,12 @@
     ViewData["PageTitle"] = Model.CategoryId == 0 ? "Create a new category" : "Edit category";
     var emojiFieldSettings = new AutoCompleteFieldSettings
             {
-                // Retrieve only the actual HTML-encoded emoji
-                Value = "htmlCode"
+                Value = "htmlCode",
+                Text = "name"
             };
 
-    // Custom item template to display the emoji
-    var itemTemplateHtml = "<div><span>${htmlCode}</span> - ${name}</div>";
+    // Custom item template to display the emoji with its name and category
+    var itemTemplateHtml = "<div style='display: flex; align-items: center;'><span style='font-size: 1.5em; margin-right: 10px; min-width: 1.5em; text-align: center;'>${htmlCode}</span><span>${name}</span><span class='text-muted ms-2'>(${category})</span></div>";
 }
 
 <div class="row justify-content-center">
@@ -75,6 +75,12 @@
 
                 // Add a filterText property for combined search
                 data.forEach(emoji => {
+                    // Make sure emoji.htmlCode is just the emoji character (not text description)
+                    if (emoji.htmlCode && emoji.htmlCode.includes(" ")) {
+                        // If htmlCode has spaces, extract just the emoji part
+                        const parts = emoji.htmlCode.split(" ");
+                        emoji.htmlCode = parts[0]; // Keep only the emoji character
+                    }
                     emoji.filterText = `${emoji.htmlCode} ${emoji.name} ${emoji.category} ${emoji.group}`;
                 });
 
@@ -82,7 +88,10 @@
                 autoCompleteObj.dataBind();
                 console.log('Data bound to ejs-autocomplete:', autoCompleteObj.dataSource);
             })
-            .catch(error => console.error('Error fetching Emoji Data:', error));
+            .catch(error => {
+                console.error('Error fetching Emoji Data:', error);
+                alert('There was an error loading emojis. Please try refreshing the page.');
+            });
 
         // Custom filtering event
         autoCompleteObj.filtering = function (e) {
@@ -94,8 +103,25 @@
 
         // Set the actual emoji in the textbox on select
         autoCompleteObj.select = function (e) {
-            // Set the autocomplete text property to the HTML-encoded emoji
-            autoCompleteObj.text = e.itemData.htmlCode;
+            // Set the autocomplete text property to just the emoji character
+            // Make sure we only get the actual emoji character without any text description
+            console.log('Selected item:', e.itemData);
+            
+            // If htmlCode contains the emoji, use it directly
+            if (e.itemData.htmlCode && e.itemData.htmlCode.length <= 8) {
+                autoCompleteObj.text = e.itemData.htmlCode;
+                console.log('Set emoji to:', e.itemData.htmlCode);
+            } else {
+                // Try to extract just the emoji part if it's a compound string
+                const emojiMatch = e.itemData.htmlCode.match(/^([^\s]+)/);
+                if (emojiMatch && emojiMatch[1]) {
+                    autoCompleteObj.text = emojiMatch[1];
+                    console.log('Extracted emoji:', emojiMatch[1]);
+                } else {
+                    autoCompleteObj.text = e.itemData.htmlCode;
+                    console.log('Using full value:', e.itemData.htmlCode);
+                }
+            }
         };
     });
 </script>

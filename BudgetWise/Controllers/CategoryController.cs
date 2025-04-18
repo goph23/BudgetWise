@@ -1,12 +1,13 @@
 ﻿using BudgetWise.Areas.Identity.Data;
 using BudgetWise.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BudgetWise.Controllers
@@ -16,17 +17,19 @@ namespace BudgetWise.Controllers
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly ApplicationDbContext _context;
-        private readonly HttpClient _httpClient;
         private readonly EmojiApiController _emojiApiController;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public CategoryController(ILogger<CategoryController> logger, ApplicationDbContext context, IHttpClientFactory httpClientFactory, UserManager<ApplicationUser> userManager)
+        public CategoryController(
+            ILogger<CategoryController> logger, 
+            ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
-            _httpClient = httpClientFactory.CreateClient();
-            _emojiApiController = new EmojiApiController(_httpClient);
+            _emojiApiController = new EmojiApiController(webHostEnvironment);
         }
 
         // GET: Category
