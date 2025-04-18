@@ -14,15 +14,18 @@
     var itemTemplateHtml = "<div><span>${htmlCode}</span> - ${name}</div>";
 }
 
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <div class="widget p-5" style="background-color:#212b36">
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="widget p-4 p-md-5 mb-4" style="background-color:#212b36; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); border-radius: 0.75rem;">
+            <h3 class="text-center mb-4">@ViewData["PageTitle"]</h3>
             <form asp-action="AddOrEdit" asp-controller="Category" method="post">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="UserId" name="UserId" value="@Model.UserId" />
                 <input type="hidden" asp-for="CategoryId" name="CategoryId" value="@Model.CategoryId" />
-                <div class="mb-3">
+                
+                <div class="mb-4">
+                    <label class="form-label mb-2">Transaction Type</label>
                     <div class='e-btn-group custom-rbt-group'>
                         <input type="radio" id="radioleft" name="Type" value="Expense" checked="@(Model.Type == "Expense")" />
                         <label class="e-btn" for="radioleft">Expense</label>
@@ -32,21 +35,21 @@
                     <span asp-validation-for="Type" class="text-danger fs-6"></span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-4">
                     <ejs-textbox id="title" placeholder="Title" ejs-for="Title" floatLabelType="Always"></ejs-textbox>
                     <span asp-validation-for="Title" class="text-danger fs-6"></span>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-4">
                     <ejs-autocomplete id="icon" placeholder="Icon" ejs-for="Icon" floatLabelType="Always" fields="emojiFieldSettings" itemTemplate="@Html.Raw(itemTemplateHtml)" allowFiltering="true"></ejs-autocomplete>
                     <span asp-validation-for="Icon" class="text-danger fs-6"></span>
                 </div>
 
-                <div class="d-flex">
-                    <ejs-button id="submit" type="submit" cssClass="e-success w-20 me-2">
+                <div class="d-flex justify-content-between mt-4">
+                    <ejs-button id="submit" type="submit" cssClass="e-success flex-grow-1 me-2" style="padding: 10px 0;">
                         <e-content-template>Submit</e-content-template>
                     </ejs-button>
-                    <ejs-button id="cancel" type="button" cssClass="e-secondary w-20 ms-2" onclick="window.location.href='@Url.Action("Index", "Category")'">
+                    <ejs-button id="cancel" type="button" cssClass="e-secondary flex-grow-1 ms-2" style="padding: 10px 0;" onclick="window.location.href='@Url.Action("Index", "Category")'">
                         <e-content-template>Cancel</e-content-template>
                     </ejs-button>
                 </div>

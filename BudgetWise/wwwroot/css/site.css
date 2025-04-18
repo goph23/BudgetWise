@@ -1129,3 +1129,144 @@ a {
         margin-top: 0 !important;
     }
 }
+
+/* Login/Register Form Styling */
+.login-logout-card {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(48, 54, 61, 0.8);
+    transition: all 0.3s ease;
+}
+
+.login-logout-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.login-logout-card .card-header {
+    background-color: #21262d;
+    border-bottom: 1px solid rgba(48, 54, 61, 0.8);
+}
+
+.login-logout-card .card-body {
+    padding: 2rem;
+}
+
+/* Style the form inputs */
+.login-logout-card .e-input-group,
+.widget .e-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.login-logout-card .form-floating,
+.widget .form-floating {
+    margin-bottom: 1.5rem;
+}
+
+.login-logout-card .btn,
+.widget .btn,
+.widget .e-btn {
+    padding: 0.75rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+/* Form widget styling */
+.form-widget {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(48, 54, 61, 0.8);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-widget:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.form-widget h3 {
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* Custom radio button group styling */
+.custom-rbt-group {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.custom-rbt-group .e-btn {
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+/* Form field spacing */
+.widget .mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.widget .form-label {
+    font-weight: 500;
+    color: #c9d1d9;
+    margin-bottom: 0.5rem;
+}
+
+/* Button styling in forms */
+.widget .e-btn {
+    min-height: 38px;
+}
+
+/* Grid toolbar styling */
+.e-grid .e-toolbar {
+    background-color: #212b36;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    padding: 10px;
+}
+
+.e-grid .e-toolbar .e-btn {
+    background-color: #238636;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.e-grid .e-toolbar .e-btn:hover {
+    background-color: #2ea043;
+}
+
+.e-grid .e-toolbar .e-tbar-btn-text {
+    font-weight: 500;
+}
+
+.e-grid .e-toolbar .e-btn .e-icons.e-btn-icon {
+    color: white;
+}
+
+/* Move add button to the left */
+.e-grid .e-toolbar .e-toolbar-items {
+    background-color: #212b36;
+}
+
+.e-grid .e-toolbar .e-toolbar-items .e-toolbar-item:first-child {
+    margin-right: auto;
+}
+
+.e-grid .e-toolbar .e-toolbar-item.e-search-wrapper {
+    margin-left: 0;
+}
+
+/* Vertical divider styling */
+.vr {
+    height: 24px;
+    opacity: 0.3;
+    align-self: center;
+}
+
+/* Vertical divider styling */
+.vr {
+    height: 24px;
+    opacity: 0.3;
+    align-self: center;
+}

@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <ejs-grid id="transactions" dataSource="@Model" gridLines="None" allowSorting="true" allowPaging="true" allowScrolling="true" width="100%" height="auto" allowSearching="true" toolbar="@(new List<string>() {"Search"})">
+        <ejs-grid id="transactions" dataSource="@Model" gridLines="None" allowSorting="true" allowPaging="true" allowScrolling="true" width="100%" height="auto" allowSearching="true" toolbar="@(new List<object>() { new { text = "New Transaction", tooltipText = "Add new transaction", prefixIcon = "e-add", id = "add" }, "Search" })">
             <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>
                 <e-grid-column headerText="Category" field="CategoryTitleWithIcon" width="250" textAlign="Left" headerTextAlign="Left"></e-grid-column>
@@ -18,12 +18,19 @@
             </e-grid-columns>
         </ejs-grid>
     </div>
-    @* <div class="col-md-5">
-        <div class="widget h-100 d-flex justify-content-center align-items-center">
-            <i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
-        </div>
-    </div> *@
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var grid = document.getElementById('transactions').ej2_instances[0];
+        
+        grid.toolbarClick = function (args) {
+            if (args.item.id === 'add') {
+                window.location.href = '@ViewData["PageActionUrl"]';
+            }
+        };
+    });
+</script>
 
 <script id="actionColumnTemplate" type="text/x-template">
     <div class="action-icons d-flex flex-row ">

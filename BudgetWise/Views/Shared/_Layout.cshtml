@@ -89,7 +89,8 @@
                                                 @* <h3 class="fw-bold my-0 pt-3 pb-3">@ViewData["PageTitle"]</h3> *@
                                                 <div class="">
                                                     @if (ViewData["PageActionText"] != null &&
-                                                   (ViewContext.RouteData.Values["controller"]?.ToString() == "Category" || ViewContext.RouteData.Values["controller"]?.ToString() == "Transaction"))
+                                                   !(ViewContext.RouteData.Values["controller"]?.ToString() == "Category" || 
+                                                      ViewContext.RouteData.Values["controller"]?.ToString() == "Transaction"))
                                                     {
                                                         <a class="btn btn-success btn-custom responsive-button" href="@ViewData["PageActionUrl"]">
                                                             <i class="fa fa-plus" aria-hidden="true"></i> &nbsp @ViewData["PageActionText"]
