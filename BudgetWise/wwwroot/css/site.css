@@ -1043,12 +1043,27 @@ a.btn-custom {
 }
 
 /* Miscellaneous */
+/* Footer positioning fixes */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#app-wrapper {
+    flex: 1 0 auto;
+}
+
 .footer {
     margin-top: auto;
     width: 100%;
     border-top: 1px solid rgba(48, 54, 61, 0.5);
     font-size: 0.9rem;
     background-color: #21262d;
+    flex-shrink: 0;
 }
 
 

@@ -40,6 +40,27 @@ function initializeBreadcrumbs() {
     // Build breadcrumb based on path segments
     let currentPath = '';
     
+    // Special handling for Identity/Account paths (login, register, etc.)
+    if (pathSegments.length >= 2 && 
+        pathSegments[0].toLowerCase() === 'identity' && 
+        pathSegments[1].toLowerCase() === 'account') {
+        
+        // For login/register pages, only show home icon and the current page as disabled
+        const lastSegment = pathSegments[pathSegments.length - 1];
+        let displayText = lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1);
+        
+        // Add the final item as disabled (no URL)
+        breadcrumbItems.push({
+            text: displayText,
+            disabled: true
+        });
+        
+        // Set the items and return early
+        breadcrumbInstance.items = breadcrumbItems;
+        return;
+    }
+    
+    // Normal breadcrumb handling for other pages
     for (let i = 0; i < pathSegments.length; i++) {
         const segment = pathSegments[i];
         currentPath += '/' + segment;

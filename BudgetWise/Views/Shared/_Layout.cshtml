@@ -43,7 +43,7 @@
     </script>
 
 </head>
-<body class="d-flex flex-column min-vh-100 @(User is not null && User.Identity is not null && User.Identity.IsAuthenticated ? "sidebar-open-desktop" : "")">
+<body class="d-flex flex-column vh-100 @(User is not null && User.Identity is not null && User.Identity.IsAuthenticated ? "sidebar-open-desktop" : "")">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
@@ -82,9 +82,9 @@
     </nav>
     
     <!-- Main Content -->
-    <div class="flex-grow-1 d-flex" id="app-wrapper">
-        <div class="container px-0" id="outer-container">
-            <div class="main-container pb-5" id="main-container">
+    <div class="flex-grow-1 d-flex flex-column" id="app-wrapper" style="min-height: calc(100vh - 120px);">
+        <div class="container px-0 flex-grow-1" id="outer-container">
+            <div class="main-container pb-5 h-100" id="main-container">
             @if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
             {
                 <partial name="_SideBar.cshtml" />
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer py-4 bg-dark">
+    <footer class="footer py-4 bg-dark" style="flex-shrink: 0; margin-top: auto;">
         <div class="container text-center">
             <span class="text-light">&copy; @DateTime.Now.Year BudgetWise</span>
         </div>
