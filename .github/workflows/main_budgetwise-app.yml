@@ -58,6 +58,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EBAA45FC0184E15BFCB67511A8515CF }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9D8DA45CC0FC4FBB9528AB1DFCB2AFAC }}
 
+      - name: Restart Azure Web App
+        run: |
+          az webapp restart --name budgetwise-app --resource-group BudgetWise
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
