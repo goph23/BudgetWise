@@ -27,6 +27,7 @@ body {
     width: 100%;
     display: flex;
     flex-direction: column;
+    min-height: 100vh; /* Ensure body takes up at least the full viewport height */
 }
 
 body.sidebar-open {
@@ -761,14 +762,92 @@ a.btn-custom {
 }
 
 /* Breadcrumb */
-.e-breadcrumb a,
-.e-breadcrumb a:hover {
-    text-decoration: none !important;
-    color: inherit !important;
+.breadcrumb-container {
+    background-color: #1c2128;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(48, 54, 61, 0.5);
+    overflow-x: auto; /* Enable horizontal scrolling on mobile */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    max-width: 100%;
 }
 
 .e-breadcrumb {
     visibility: visible !important;
+    font-size: 0.95rem;
+    white-space: nowrap; /* Prevent wrapping of breadcrumb items */
+    min-width: max-content; /* Ensure all breadcrumb items are visible */
+}
+
+.e-breadcrumb-item {
+    color: #c9d1d9;
+    max-width: 200px; /* Increased width for desktop */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.e-breadcrumb-item-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+.e-breadcrumb a {
+    color: #58a6ff !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.e-breadcrumb a:hover {
+    color: #79b8ff !important;
+    text-decoration: underline !important;
+}
+
+.e-breadcrumb-separator {
+    color: #8b949e;
+    margin: 0 0.5rem;
+    flex-shrink: 0; /* Prevent separator from shrinking */
+}
+
+.e-breadcrumb-item.e-active {
+    color: #e6edf3;
+    font-weight: 500;
+}
+
+/* Breadcrumb icon styling */
+.e-breadcrumb .e-breadcrumb-item .e-breadcrumb-icon {
+    margin-right: 5px;
+    font-size: 0.9rem;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Mobile-specific breadcrumb styling */
+@media (max-width: 576px) {
+    .breadcrumb-container {
+        padding: 0.5rem;
+    }
+    
+    .e-breadcrumb {
+        font-size: 0.85rem;
+    }
+    
+    .e-breadcrumb-item {
+        max-width: 120px;
+    }
+    
+    .e-breadcrumb-separator {
+        margin: 0 0.25rem;
+    }
+}
+
+/* Medium screens - adjust breadcrumb sizing */
+@media (min-width: 577px) and (max-width: 992px) {
+    .e-breadcrumb-item {
+        max-width: 180px;
+    }
 }
 
 /* Radio Button Group */
@@ -964,8 +1043,12 @@ a.btn-custom {
 }
 
 /* Miscellaneous */
-footer {
+.footer {
     margin-top: auto;
+    width: 100%;
+    border-top: 1px solid rgba(48, 54, 61, 0.5);
+    font-size: 0.9rem;
+    background-color: #21262d;
 }
 
 

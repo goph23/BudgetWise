@@ -1,4 +1,4 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
 // Initialize all components
@@ -16,7 +16,84 @@ function updateViewportClass() {
 window.addEventListener('resize', updateViewportClass);
 updateViewportClass(); // Run immediately
 
+// Function to initialize breadcrumbs
+function initializeBreadcrumbs() {
+    const breadcrumbElement = document.getElementById('breadcrumb');
+    if (!breadcrumbElement || !breadcrumbElement.ej2_instances || !breadcrumbElement.ej2_instances[0]) return;
+    
+    const breadcrumbInstance = breadcrumbElement.ej2_instances[0];
+    
+    // Get current path information
+    const path = window.location.pathname;
+    const pathSegments = path.split('/').filter(segment => segment !== '');
+    
+    // Create breadcrumb items
+    const breadcrumbItems = [];
+    
+    // Always add home as first item with just an icon
+    breadcrumbItems.push({
+        text: '',
+        url: '/',
+        iconCss: 'fa-solid fa-home'
+    });
+    
+    // Build breadcrumb based on path segments
+    let currentPath = '';
+    
+    for (let i = 0; i < pathSegments.length; i++) {
+        const segment = pathSegments[i];
+        currentPath += '/' + segment;
+        
+        // Skip segments that represent IDs (numbers) or actions
+        if (!isNaN(segment)) continue;
+        
+        // Skip the "Home" controller in the breadcrumb since we already have the home icon
+        if (segment.toLowerCase() === 'home') continue;
+        
+        // Format the display text
+        let displayText = segment.charAt(0).toUpperCase() + segment.slice(1);
+        
+        // Handle special cases with mobile-friendly shorter text
+        if (segment.toLowerCase() === 'category') displayText = 'Categories';
+        if (segment.toLowerCase() === 'transaction') displayText = 'Transactions';
+        if (segment.toLowerCase() === 'addoredit' && i > 0) {
+            const parentSegment = pathSegments[i-1].toLowerCase();
+            if (parentSegment === 'category') {
+                displayText = window.innerWidth <= 576 ? 'Edit' : 'Manage Category';
+            } else if (parentSegment === 'transaction') {
+                // Ensure "Manage Transaction" fits properly on all screen sizes
+                displayText = window.innerWidth <= 576 ? 'Edit' : 
+                            (window.innerWidth <= 992 ? 'Edit Transaction' : 'Manage Transaction');
+            }
+        }
+        
+        // Add the item
+        if (i === pathSegments.length - 1) {
+            // Last item doesn't have a URL
+            breadcrumbItems.push({
+                text: displayText
+            });
+        } else {
+            breadcrumbItems.push({
+                text: displayText,
+                url: currentPath
+            });
+        }
+    }
+    
+    // Set the breadcrumb items
+    breadcrumbInstance.items = breadcrumbItems;
+}
+
+// Update breadcrumbs when window resizes
+window.addEventListener('resize', function() {
+    // Only reinitialize if we cross the mobile breakpoint
+    initializeBreadcrumbs();
+});
+
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize breadcrumbs
+    initializeBreadcrumbs();
     
     // Bootstrap initialization for navbar toggler
     var navbarToggler = document.getElementById('navbar-toggler');

@@ -15,15 +15,20 @@
 
 @if (isAuthenticated)
 {
-    <div class="alert alert-info">
-        <strong>You're logged in!</strong> This is a demo dashboard with sample data. Visit your <a href="@Url.Action("Index", "Dashboard")" class="alert-link">personal dashboard</a> to see your actual data.
+    <div class="alert alert-success mb-4">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-circle-check me-3 fs-4"></i>
+            <div>
+                <strong>Your Dashboard</strong> - This page displays your personal financial data. Add transactions to see your data visualized in these charts.
+            </div>
+        </div>
     </div>
 }
 
-<div class="row mb-0">
-    <div class="col-12 col-md-4 mb-4">
-        <div class="d-flex flex-row widget summary income">
-            <div class="d-flex flex-column justify-content-center">
+<div class="row gx-4 gy-4 mb-4">
+    <div class="col-12 col-md-4">
+        <div class="d-flex flex-row widget summary income h-100">
+            <div class="d-flex flex-column justify-content-center ps-4">
                 <i class="fa-solid fa-dollar-sign fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
@@ -32,9 +37,9 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-4 mb-4">
-        <div class="d-flex flex-row widget summary expense">
-            <div class="d-flex flex-column justify-content-center">
+    <div class="col-12 col-md-4">
+        <div class="d-flex flex-row widget summary expense h-100">
+            <div class="d-flex flex-column justify-content-center ps-4">
                 <i class="fa-solid fa-dollar-sign fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
@@ -43,9 +48,9 @@
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-4 mb-4">
-        <div class="d-flex flex-row widget summary balance">
-            <div class="d-flex flex-column justify-content-center">
+    <div class="col-12 col-md-4">
+        <div class="d-flex flex-row widget summary balance h-100">
+            <div class="d-flex flex-column justify-content-center ps-4">
                 <i class="fa-solid fa-dollar-sign fa-2xl"></i>
             </div>
             <div class="d-flex flex-column m-auto py-3">
@@ -56,12 +61,12 @@
     </div>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+<div class="row gx-4 gy-4 mb-4">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Expense by Category</h5>
-                <h6>Last 7 Days</h6>
+                <h6 class="text-muted mb-0">Last 7 Days</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (treemapData != null && treemapData.Any())
@@ -82,17 +87,20 @@
                 }
                 else
                 {
-                    <p>No data available for the Treemap.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-chart-pie fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Treemap. Add some transactions to see your spending breakdown.</p>
+                    </div>
                 }
             </div>
         </div>
     </div>
 
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Income vs Expense</h5>
-                <h6>Last 7 Days</h6>
+                <h6 class="text-muted mb-0">Last 7 Days</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (barChartData != null && barChartData.Any())
@@ -121,23 +129,25 @@
                             <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
                         </e-chart-tooltipsettings>
                     </ejs-chart>
-
                 }
                 else
                 {
-                    <p>No data available for the Bar Chart.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-chart-column fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Bar Chart. Add some transactions to see your income vs expense comparison.</p>
+                    </div>
                 }
             </div>
         </div>
     </div>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+<div class="row gx-4 gy-4 mb-4">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Income vs Expense</h5>
-                <h6>Last 30 Days</h6>
+                <h6 class="text-muted mb-0">Last 30 Days</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (stackedColumnChartData != null && stackedColumnChartData.Any())
@@ -170,20 +180,22 @@
                             <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
                         </e-chart-tooltipsettings>
                     </ejs-chart>
-
                 }
                 else
                 {
-                    <p>No data available for the Stacked Column Chart.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-chart-simple fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Stacked Column Chart. Add some transactions to see your 30-day trends.</p>
+                    </div>
                 }
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Number of Transactions</h5>
-                <h6>Last 12 Months From First Entry</h6>
+                <h6 class="text-muted mb-0">Last 12 Months From First Entry</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (bubbleChartData != null && bubbleChartData.Any())
@@ -220,19 +232,22 @@
                 }
                 else
                 {
-                    <p>No data available for the Bubble Chart.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-circle-dot fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Bubble Chart. Add transactions to see your activity patterns.</p>
+                    </div>
                 }
             </div>
         </div>
     </div>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+<div class="row gx-4 gy-4">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Monthly Trend</h5>
-                <h6>Last 12 Months from First Entry</h6>
+                <h6 class="text-muted mb-0">Last 12 Months from First Entry</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (monthlyTrendChartData != null && monthlyTrendChartData.Any() && monthlyTrendChartData.Any(data => data.Income != 0 || data.Expense != 0 || data.Balance != 0))
@@ -264,16 +279,19 @@
                 }
                 else
                 {
-                    <p>No data available for the Monthly Trend Chart.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-chart-line fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Monthly Trend Chart. Add transactions to see your long-term financial patterns.</p>
+                    </div>
                 }
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 mb-4">
-        <div class="widget chart">
+    <div class="col-12 col-md-6">
+        <div class="widget chart h-100">
             <div class="p-4">
                 <h5 class="fw-bold">Income vs Expense</h5>
-                <h6>Last 12 Months from First Entry</h6>
+                <h6 class="text-muted mb-0">Last 12 Months from First Entry</h6>
             </div>
             <div class="px-4 pb-4">
                 @if (stackedAreaChartData != null && stackedAreaChartData.Any())
@@ -308,7 +326,10 @@
                 }
                 else
                 {
-                    <p>No data available for the Stacked Area Chart.</p>
+                    <div class="text-center py-4">
+                        <i class="fa-solid fa-chart-area fa-2x text-muted mb-3"></i>
+                        <p>No data available for the Stacked Area Chart. Add transactions to see your yearly income and expense.</p>
+                    </div>
                 }
             </div>
         </div>
