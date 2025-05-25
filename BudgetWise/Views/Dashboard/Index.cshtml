@@ -1,15 +1,14 @@
-﻿@using Syncfusion.EJ2.Maps;
-@using Syncfusion.EJ2.HeatMap;
-@using BudgetWise.Models;
 @{
     ViewData["isDashboard"] = true;
-    var treemapData = ViewBag.TreemapData as IEnumerable<object>;
-    var barChartData = ViewBag.BarChartData as IEnumerable<BarChartData>;
-    var stackedColumnChartData = ViewBag.StackedColumnChartData as IEnumerable<dynamic>;
-    var bubbleChartData = ViewBag.BubbleChartData as IEnumerable<BubbleChartData>;
-    var monthlyTrendChartData = ViewBag.MonthlyTrendChartData as IEnumerable<MonthlyTrendData>;
-    var stackedAreaChartData = ViewBag.StackedAreaChartData as IEnumerable<dynamic>;
-
+    var dailyMetrics = ViewBag.DailyBudgetMetrics as BudgetWise.Models.BudgetMetrics;
+    var monthlyMetrics = ViewBag.MonthlyBudgetMetrics as BudgetWise.Models.BudgetMetrics;
+    var yearlyMetrics = ViewBag.YearlyBudgetMetrics as BudgetWise.Models.BudgetMetrics;
+    var topCategories = ViewBag.TopExpenseCategories as List<BudgetWise.Models.CategoryExpense>;
+    var savingsRate = ViewBag.SavingsRate != null ? (decimal)ViewBag.SavingsRate : 0;
+    var expenseBreakdown = ViewBag.ExpenseBreakdown as List<BudgetWise.Models.ExpenseBreakdown>;
+    var recentTransactions = ViewBag.RecentTransactions as List<BudgetWise.Models.RecentTransaction>;
+    var monthlyTrendData = ViewBag.MonthlyTrendChartData as IEnumerable<BudgetWise.Models.MonthlyTrendData>;
+    
     bool isAuthenticated = ViewData["isAuthenticated"] != null && (bool)ViewData["isAuthenticated"];
 }
 
@@ -19,319 +18,570 @@
         <div class="d-flex align-items-center">
             <i class="fa-solid fa-circle-check me-3 fs-4"></i>
             <div>
-                <strong>Your Dashboard</strong> - This page displays your personal financial data. Add transactions to see your data visualized in these charts.
+                <strong>Your Dashboard</strong> - This page displays your personal financial data. Add transactions to see your data visualized.
             </div>
         </div>
     </div>
 }
 
-<div class="row gx-4 gy-4 mb-4">
-    <div class="col-12 col-md-4">
-        <div class="d-flex flex-row widget summary income h-100">
-            <div class="d-flex flex-column justify-content-center ps-4">
-                <i class="fa-solid fa-dollar-sign fa-2xl"></i>
+<div class="dashboard-header mb-4">
+    <h2 class="text-white mb-0">Financial Dashboard</h2>
+    <p class="text-muted mb-0">Track your income, expenses, and savings</p>
+</div>
+
+<ul class="nav nav-tabs dashboard-tabs mb-4" id="dashboardTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
+            <i class="fa-solid fa-chart-pie me-2"></i>Overview
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="budget-tab" data-bs-toggle="tab" data-bs-target="#budget" type="button" role="tab" aria-controls="budget" aria-selected="false">
+            <i class="fa-solid fa-calculator me-2"></i>Budget Insights
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="trends-tab" data-bs-toggle="tab" data-bs-target="#trends" type="button" role="tab" aria-controls="trends" aria-selected="false">
+            <i class="fa-solid fa-chart-line me-2"></i>Trends
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="false">
+            <i class="fa-solid fa-list me-2"></i>Recent Activity
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="dashboardTabContent">
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        <!-- Summary Cards -->
+        <div class="row gx-4 gy-4 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="metric-card">
+                    <div class="metric-icon income">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-label">Total Income</span>
+                        <h3 class="metric-value">@ViewBag.TotalIncome</h3>
+                        <span class="metric-subtext">All time</span>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex flex-column m-auto py-3">
-                <span class="lead fs-6 fs-md-4">Total Income</span>
-                <h1 class="display-6 fw-bold fs-4 fs-md-2">@ViewBag.TotalIncome</h1>
+            <div class="col-12 col-md-4">
+                <div class="metric-card">
+                    <div class="metric-icon expense">
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-label">Total Expenses</span>
+                        <h3 class="metric-value">@ViewBag.TotalExpense</h3>
+                        <span class="metric-subtext">All time</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="metric-card">
+                    <div class="metric-icon balance">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-label">Net Balance</span>
+                        <h3 class="metric-value">@ViewBag.Balance</h3>
+                        <span class="metric-subtext">Income - Expenses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row gx-4 gy-4">
+            <div class="col-12 col-lg-6">
+                <div class="widget chart h-100">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Expense Breakdown</h5>
+                        <span class="chart-subtitle">Last 30 days</span>
+                    </div>
+                    <div class="chart-body">
+                        <div id="expensesPieChart" style="height: 350px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="widget chart h-100">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Top Expense Categories</h5>
+                        <span class="chart-subtitle">Last 30 days</span>
+                    </div>
+                    <div class="chart-body">
+                        @if (topCategories != null && topCategories.Any())
+                        {
+                            <div class="category-list">
+                                @foreach (var category in topCategories)
+                                {
+                                    <div class="category-item">
+                                        <div class="category-info">
+                                            <span class="category-icon">@Html.Raw(category.Icon)</span>
+                                            <span class="category-name">@category.CategoryName</span>
+                                        </div>
+                                        <div class="category-stats">
+                                            <span class="category-amount">$@category.Amount.ToString("N0")</span>
+                                            <span class="category-percentage">@category.Percentage.ToString("F1")%</span>
+                                        </div>
+                                        <div class="category-bar">
+                                            <div class="category-bar-fill" style="width: @category.Percentage%"></div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fa-solid fa-chart-pie fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No expense data available</p>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-4">
-        <div class="d-flex flex-row widget summary expense h-100">
-            <div class="d-flex flex-column justify-content-center ps-4">
-                <i class="fa-solid fa-dollar-sign fa-2xl"></i>
+
+    <!-- Budget Insights Tab -->
+    <div class="tab-pane fade" id="budget" role="tabpanel" aria-labelledby="budget-tab">
+        <div class="row gx-4 gy-4 mb-4">
+            <!-- Daily Budget -->
+            <div class="col-12 col-md-4">
+                <div class="budget-card">
+                    <h5 class="budget-period">Daily Budget</h5>
+                    <div class="budget-metrics">
+                        <div class="budget-metric">
+                            <span class="metric-label">Income</span>
+                            <span class="metric-value income">$@(dailyMetrics?.Income.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Expenses</span>
+                            <span class="metric-value expense">$@(dailyMetrics?.Expense.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Balance</span>
+                            <span class="metric-value @(dailyMetrics?.Balance >= 0 ? "positive" : "negative")">
+                                $@(dailyMetrics?.Balance.ToString("N0") ?? "0")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="budget-footer">
+                        <span class="transactions-count">@(dailyMetrics?.TransactionCount ?? 0) transactions</span>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex flex-column m-auto py-3">
-                <span class="lead fs-6 fs-md-4">Total Expense</span>
-                <h1 class="display-6 fw-bold fs-4 fs-md-2">@ViewBag.TotalExpense</h1>
+
+            <!-- Monthly Budget -->
+            <div class="col-12 col-md-4">
+                <div class="budget-card">
+                    <h5 class="budget-period">@(monthlyMetrics?.Period ?? "Monthly") Budget</h5>
+                    <div class="budget-metrics">
+                        <div class="budget-metric">
+                            <span class="metric-label">Income</span>
+                            <span class="metric-value income">$@(monthlyMetrics?.Income.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Expenses</span>
+                            <span class="metric-value expense">$@(monthlyMetrics?.Expense.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Balance</span>
+                            <span class="metric-value @(monthlyMetrics?.Balance >= 0 ? "positive" : "negative")">
+                                $@(monthlyMetrics?.Balance.ToString("N0") ?? "0")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="budget-stats">
+                        <div class="stat">
+                            <span class="stat-label">Avg Daily Expense</span>
+                            <span class="stat-value">$@(monthlyMetrics?.AverageExpense.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Avg Daily Income</span>
+                            <span class="stat-value">$@(monthlyMetrics?.AverageIncome.ToString("N0") ?? "0")</span>
+                        </div>
+                    </div>
+                    <div class="budget-footer">
+                        <span class="transactions-count">@(monthlyMetrics?.TransactionCount ?? 0) transactions</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yearly Budget -->
+            <div class="col-12 col-md-4">
+                <div class="budget-card">
+                    <h5 class="budget-period">@(yearlyMetrics?.Period ?? "Yearly") Budget</h5>
+                    <div class="budget-metrics">
+                        <div class="budget-metric">
+                            <span class="metric-label">Income</span>
+                            <span class="metric-value income">$@(yearlyMetrics?.Income.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Expenses</span>
+                            <span class="metric-value expense">$@(yearlyMetrics?.Expense.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="budget-metric">
+                            <span class="metric-label">Balance</span>
+                            <span class="metric-value @(yearlyMetrics?.Balance >= 0 ? "positive" : "negative")">
+                                $@(yearlyMetrics?.Balance.ToString("N0") ?? "0")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="budget-stats">
+                        <div class="stat">
+                            <span class="stat-label">Avg Daily Expense</span>
+                            <span class="stat-value">$@(yearlyMetrics?.AverageExpense.ToString("N0") ?? "0")</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Avg Daily Income</span>
+                            <span class="stat-value">$@(yearlyMetrics?.AverageIncome.ToString("N0") ?? "0")</span>
+                        </div>
+                    </div>
+                    <div class="budget-footer">
+                        <span class="transactions-count">@(yearlyMetrics?.TransactionCount ?? 0) transactions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Savings Rate -->
+        <div class="row gx-4 gy-4">
+            <div class="col-12">
+                <div class="widget">
+                    <div class="savings-rate-card">
+                        <h5 class="mb-3">Savings Rate (Last 30 Days)</h5>
+                        <div class="savings-rate-display">
+                            <div class="savings-percentage @(savingsRate >= 0 ? "positive" : "negative")">
+                                @savingsRate.ToString("F1")%
+                            </div>
+                            <div class="savings-description">
+                                @if (savingsRate > 0)
+                                {
+                                    <p>Great job! You're saving @savingsRate.ToString("F1")% of your income.</p>
+                                }
+                                else if (savingsRate == 0)
+                                {
+                                    <p>You're breaking even. Try to reduce expenses to start saving.</p>
+                                }
+                                else
+                                {
+                                    <p>You're spending more than you earn. Consider reducing expenses.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-4">
-        <div class="d-flex flex-row widget summary balance h-100">
-            <div class="d-flex flex-column justify-content-center ps-4">
-                <i class="fa-solid fa-dollar-sign fa-2xl"></i>
+
+    <!-- Trends Tab -->
+    <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
+        <div class="row gx-4 gy-4">
+            <div class="col-12">
+                <div class="widget chart">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Income vs Expenses Trend</h5>
+                        <span class="chart-subtitle">Last 12 months</span>
+                    </div>
+                    <div class="chart-body">
+                        <div id="trendChart" style="height: 400px;"></div>
+                    </div>
+                </div>
             </div>
-            <div class="d-flex flex-column m-auto py-3">
-                <span class="lead fs-6 fs-md-4">Balance</span>
-                <h1 class="display-6 fw-bold fs-4 fs-md-2">@ViewBag.Balance</h1>
+            <div class="col-12 col-lg-6">
+                <div class="widget chart">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Monthly Comparison</h5>
+                        <span class="chart-subtitle">Income and Expenses</span>
+                    </div>
+                    <div class="chart-body">
+                        <div id="monthlyBarChart" style="height: 350px;"></div>
+                    </div>
+                </div>
             </div>
+            <div class="col-12 col-lg-6">
+                <div class="widget chart">
+                    <div class="chart-header">
+                        <h5 class="chart-title">Balance Trend</h5>
+                        <span class="chart-subtitle">Monthly net balance</span>
+                    </div>
+                    <div class="chart-body">
+                        <div id="balanceChart" style="height: 350px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Tab -->
+    <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
+        <div class="widget">
+            <h5 class="mb-4">Recent Transactions</h5>
+            @if (recentTransactions != null && recentTransactions.Any())
+            {
+                <div class="transaction-list">
+                    @foreach (var transaction in recentTransactions)
+                    {
+                        <div class="transaction-item">
+                            <div class="transaction-icon @(transaction.Type == "Income" ? "income" : "expense")">
+                                @Html.Raw(transaction.Icon)
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-category">@transaction.CategoryName</div>
+                                @if (!string.IsNullOrEmpty(transaction.Note))
+                                {
+                                    <div class="transaction-note">@transaction.Note</div>
+                                }
+                                <div class="transaction-date">@transaction.Date.ToString("MMM dd, yyyy")</div>
+                            </div>
+                            <div class="transaction-amount @(transaction.Type == "Income" ? "income" : "expense")">
+                                @(transaction.Type == "Income" ? "+" : "-")$@transaction.Amount.ToString("N0")
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="text-center mt-4">
+                    <a href="/Transaction" class="btn btn-outline-primary">View All Transactions</a>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-receipt fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No recent transactions</p>
+                    <a href="/Transaction/AddOrEdit" class="btn btn-primary">Add Transaction</a>
+                </div>
+            }
         </div>
     </div>
 </div>
 
-<div class="row gx-4 gy-4 mb-4">
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Expense by Category</h5>
-                <h6 class="text-muted mb-0">Last 7 Days</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (treemapData != null && treemapData.Any())
-                {
-                    <ejs-treemap id="treemap" enableDrillDown="true" dataSource="@treemapData" weightValuePath="amount"
-                                 palette="@(new string[]{"#0e8d76","#a4b219","#cb9b00","#8a442c","#0454b5","#7d0a0a","#822690","#4c2090","#313e93","#0096ac"})"
-                                 legendSettings="@(new Syncfusion.EJ2.TreeMap.TreeMapLegendSettings { Visible = true, Position = Syncfusion.EJ2.TreeMap.LegendPosition.Top })"
-                                 format="c1" useGroupingSeparator leafItemSettings="@(new Syncfusion.EJ2.TreeMap.TreeMapLeafItemSettings { LabelPath = "categoryTitleWithIcon" })"
-                                 width="auto" height="auto" background="#1a222b">
-                        <e-treemap-legendsettings visible="true" position="@Syncfusion.EJ2.TreeMap.LegendPosition.Top" shape="@Syncfusion.EJ2.TreeMap.LegendShape.Circle">
-                            <e-legendsettings-textstyle Color="white" Size="auto" />
-                        </e-treemap-legendsettings>
-                        <e-treemap-tooltipsettings visible="true" fill="#12161d" format="@("${categoryTitleWithIcon}<br>Amount: ${formattedAmount}")">
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-treemap-tooltipsettings>
-                    </ejs-treemap>
+@section Scripts {
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    
+    <script>
+        // Highcharts theme
+        Highcharts.theme = {
+            colors: ['#65da41', '#ff4e48', '#4a90e2', '#f5a623', '#bd10e0', '#50e3c2', '#b8e986', '#ffda44'],
+            chart: {
+                backgroundColor: '#1a222b',
+                style: {
+                    fontFamily: 'inherit'
                 }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-chart-pie fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Treemap. Add some transactions to see your spending breakdown.</p>
-                    </div>
+            },
+            title: {
+                style: {
+                    color: '#fff'
                 }
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Income vs Expense</h5>
-                <h6 class="text-muted mb-0">Last 7 Days</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (barChartData != null && barChartData.Any())
-                {
-                    <ejs-chart id="bar-chart" background="#1a222b" palettes='@(new string[] {"#65da41", "#ff4e48"})' width="100%" height="100%">
-                        <e-chart-primaryxaxis valueType="Category" labelRotation="90" labelFormat="MMM dd" LabelIntersectAction="Rotate90" title="Day" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="0"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-labelstyle color="#ffffff" textAlignment="Center"></e-labelstyle>
-                        </e-chart-primaryxaxis>
-                        <e-chart-primaryyaxis labelFormat="c0" title="Amount" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-linestyle width="0"></e-linestyle>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryyaxis>
-                        <e-series-collection>
-                            <e-series dataSource="@barChartData" xName="day" yName="income" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Column" name="Income"></e-series>
-                            <e-series dataSource="@barChartData" xName="day" yName="expense" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Column" name="Expense"></e-series>
-                        </e-series-collection>
-                        <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
-                            <e-legendsettings-textstyle color="#ffffff"></e-legendsettings-textstyle>
-                        </e-chart-legendsettings>
-                        <e-chart-tooltipsettings enable="true" shared="true" fill="#12161d" format="@("${series.name}: ${point.y}")">
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-chart-tooltipsettings>
-                    </ejs-chart>
+            },
+            subtitle: {
+                style: {
+                    color: '#aaa'
                 }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-chart-column fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Bar Chart. Add some transactions to see your income vs expense comparison.</p>
-                    </div>
+            },
+            legend: {
+                itemStyle: {
+                    color: '#fff'
+                },
+                itemHoverStyle: {
+                    color: '#ccc'
                 }
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row gx-4 gy-4 mb-4">
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Income vs Expense</h5>
-                <h6 class="text-muted mb-0">Last 30 Days</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (stackedColumnChartData != null && stackedColumnChartData.Any())
-                {
-                    <ejs-chart id="stacked-column-chart" background="#1a222b" palettes='@(new string[] {"#65da41", "#ff4e48"})' width="100%" height="100%">
-                        <e-chart-primaryxaxis valueType="DateTime" title="Day" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })"
-                                              labelRotation="90" LabelIntersectAction="Rotate90" labelFormat="MMM dd" intervalType="Days" edgeLabelPlacement="Shift">
-                            <e-majorgridlines width="0"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-labelstyle color="#ffffff" textAlignment="Center"></e-labelstyle>
-                        </e-chart-primaryxaxis>
-                        <e-chart-primaryyaxis labelFormat="c0" title="Amount" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-linestyle width="0"></e-linestyle>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryyaxis>
-                        <e-chart-chartarea>
-                            <e-chartarea-border width="0"></e-chartarea-border>
-                        </e-chart-chartarea>
-                        <e-series-collection>
-                            <e-series dataSource="@stackedColumnChartData" xName="Date" yName="Income" name="Income" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn"></e-series>
-                            <e-series dataSource="@stackedColumnChartData" xName="Date" yName="Expense" name="Expense" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn"></e-series>
-                        </e-series-collection>
-                        <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
-                            <e-legendsettings-textstyle color="#ffffff"></e-legendsettings-textstyle>
-                        </e-chart-legendsettings>
-                        <e-chart-tooltipsettings enable="true" shared="true" fill="#12161d" format="@("${series.name}: ${point.y}")">
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-chart-tooltipsettings>
-                    </ejs-chart>
+            },
+            xAxis: {
+                labels: {
+                    style: {
+                        color: '#fff'
+                    }
+                },
+                gridLineColor: '#32414d'
+            },
+            yAxis: {
+                labels: {
+                    style: {
+                        color: '#fff'
+                    }
+                },
+                gridLineColor: '#32414d'
+            },
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        color: '#fff'
+                    }
                 }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-chart-simple fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Stacked Column Chart. Add some transactions to see your 30-day trends.</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Number of Transactions</h5>
-                <h6 class="text-muted mb-0">Last 12 Months From First Entry</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (bubbleChartData != null && bubbleChartData.Any())
-                {
-                    <ejs-chart id="bubble-chart" background="#1a222b" width="100%" height="100%">
-                        <e-chart-primaryxaxis visible="true" title="Transaction Count" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })" labelRotation="0"
-                                              interval="3" enableTrim="true" labelIntersectAction="Trim" maximumLabelWidth="40" labelPlacement="OnTicks">
-                            <e-majorgridlines width="0"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryxaxis>
-                        <e-chart-primaryyaxis labelFormat="c0" title="Amount" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-linestyle width="0"></e-linestyle>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryyaxis>
-                        <e-series-collection>
-                            @foreach (var typeGroup in bubbleChartData.GroupBy(d => d.type))
-                            {
-                                <e-series dataSource="@typeGroup.OrderBy(d => d.size)" xName="size" yName="amount" size="size" name="@typeGroup.Key" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Bubble" fill="@((typeGroup.Key == "Income") ? "#65da41" : "#ff4e48")" tooltipMappingName="category">
-                                    <e-series-marker width="10" height="10" opacity="0.8"></e-series-marker>
-                                </e-series>
-                            }
-                        </e-series-collection>
-                        <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
-                            <e-legendsettings-textstyle color="#ffffff"></e-legendsettings-textstyle>
-                        </e-chart-legendsettings>
-                        <e-chart-tooltipsettings enable="true" shared="false" fill="#12161d" format=@("Category: ${point.tooltip}<br/>Amount: ${point.y}<br/>Transactions: ${point.size}")>
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-chart-tooltipsettings>
-                    </ejs-chart>
-                }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-circle-dot fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Bubble Chart. Add transactions to see your activity patterns.</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row gx-4 gy-4">
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Monthly Trend</h5>
-                <h6 class="text-muted mb-0">Last 12 Months from First Entry</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (monthlyTrendChartData != null && monthlyTrendChartData.Any() && monthlyTrendChartData.Any(data => data.Income != 0 || data.Expense != 0 || data.Balance != 0))
-                {
-                    <ejs-chart id="monthly-trend-chart" background="#1a222b" palettes='@(new string[] {"#2cb850", "#e61f1f", "#ffa500"})' width="100%" height="100%">
-                        <e-chart-primaryxaxis valueType="Category" labelRotation="90" LabelIntersectAction="Rotate90" title="Month" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="0"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-labelstyle color="#ffffff" textAlignment="Center"></e-labelstyle>
-                        </e-chart-primaryxaxis>
-                        <e-chart-primaryyaxis labelFormat="c0" title="Amount" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                            <e-majorticklines width="1"></e-majorticklines>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryyaxis>
-                        <e-series-collection>
-                            <e-series dataSource="@monthlyTrendChartData" xName="Month" yName="Income" name="Income" type="Line" width="3" fill="#2cb850"></e-series>
-                            <e-series dataSource="@monthlyTrendChartData" xName="Month" yName="Expense" name="Expense" type="Line" width="3" fill="#e61f1f"></e-series>
-                            <e-series dataSource="@monthlyTrendChartData" xName="Month" yName="Balance" name="Balance" type="Line" width="3" fill="#ffa500"></e-series>
-                        </e-series-collection>
-                        <e-chart-legendsettings>
-                            <e-legendsettings-textstyle color="#ffffff"></e-legendsettings-textstyle>
-                        </e-chart-legendsettings>
-                        <e-chart-tooltipsettings enable="true" shared="true" fill="#12161d" format="@("${series.name}: ${point.y}")">
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-chart-tooltipsettings>
-                    </ejs-chart>
-                }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-chart-line fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Monthly Trend Chart. Add transactions to see your long-term financial patterns.</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="widget chart h-100">
-            <div class="p-4">
-                <h5 class="fw-bold">Income vs Expense</h5>
-                <h6 class="text-muted mb-0">Last 12 Months from First Entry</h6>
-            </div>
-            <div class="px-4 pb-4">
-                @if (stackedAreaChartData != null && stackedAreaChartData.Any())
-                {
-                    <ejs-chart id="stacked-area-chart" background="#1a222b" width="100%" height="100%">
-                        <e-chart-primaryxaxis valueType="Category" title="Month" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })" labelRotation="90" LabelIntersectAction="Rotate90">
-                            <e-majorgridlines width="0"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-labelstyle color="#ffffff" textAlignment="Center"></e-labelstyle>
-                        </e-chart-primaryxaxis>
-                        <e-chart-primaryyaxis labelFormat="c0" title="Amount" titleStyle="@(new Syncfusion.EJ2.Charts.ChartFont { Color = "white" })">
-                            <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
-                            <e-majorticklines width="0"></e-majorticklines>
-                            <e-linestyle width="0"></e-linestyle>
-                            <e-labelstyle color="#ffffff"></e-labelstyle>
-                        </e-chart-primaryyaxis>
-                        <e-chart-chartarea>
-                            <e-chartarea-border width="0"></e-chartarea-border>
-                        </e-chart-chartarea>
-                        <e-series-collection>
-                            <e-series dataSource="@stackedAreaChartData" xName="Month" yName="Expense" name="Expense" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingArea" fill="#ff4e48"></e-series>
-                            <e-series dataSource="@stackedAreaChartData" xName="Month" yName="Income" name="Income" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingArea" fill="#65da41"></e-series>
-                        </e-series-collection>
-                        <e-chart-legendsettings position="Top" alignment="Far" toggleVisibility="false">
-                            <e-legendsettings-textstyle color="#ffffff" size="14px"></e-legendsettings-textstyle>
-                        </e-chart-legendsettings>
-                        <e-chart-tooltipsettings enable="true" shared="true" fill="#12161d" format="@("${series.name}: ${point.y}")">
-                            <e-tooltipsettings-border width="1"></e-tooltipsettings-border>
-                            <e-tooltipsettings-textstyle color="#ffffff" fontFamily="inherit" size="15px"></e-tooltipsettings-textstyle>
-                        </e-chart-tooltipsettings>
-                    </ejs-chart>
-                }
-                else
-                {
-                    <div class="text-center py-4">
-                        <i class="fa-solid fa-chart-area fa-2x text-muted mb-3"></i>
-                        <p>No data available for the Stacked Area Chart. Add transactions to see your yearly income and expense.</p>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+            },
+            credits: {
+                enabled: false
+            }
+        };
+        
+        Highcharts.setOptions(Highcharts.theme);
+        
+        // Expense Pie Chart
+        @if (expenseBreakdown != null && expenseBreakdown.Any())
+        {
+            <text>
+            Highcharts.chart('expensesPieChart', {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: null
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: ${point.y:,.0f}'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [{
+                    name: 'Amount',
+                    colorByPoint: true,
+                    data: [
+                        @foreach (var expense in expenseBreakdown)
+                        {
+                            <text>{ name: '@expense.Category', y: @expense.Amount },</text>
+                        }
+                    ]
+                }]
+            });
+            </text>
+        }
+        
+        // Trend Chart
+        @if (monthlyTrendData != null && monthlyTrendData.Any())
+        {
+            <text>
+            Highcharts.chart('trendChart', {
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: [@Html.Raw(string.Join(",", monthlyTrendData.Select(m => $"'{m.Month}'")))],
+                    crosshair: true
+                },
+                yAxis: {
+                    title: {
+                        text: 'Amount ($)'
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    valuePrefix: '$'
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        enableMouseTracking: true
+                    }
+                },
+                series: [{
+                    name: 'Income',
+                    data: [@string.Join(",", monthlyTrendData.Select(m => m.Income))],
+                    color: '#65da41'
+                }, {
+                    name: 'Expenses',
+                    data: [@string.Join(",", monthlyTrendData.Select(m => m.Expense))],
+                    color: '#ff4e48'
+                }]
+            });
+            
+            // Monthly Bar Chart
+            Highcharts.chart('monthlyBarChart', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: [@Html.Raw(string.Join(",", monthlyTrendData.Take(6).Select(m => $"'{m.Month}'")))],
+                    crosshair: true
+                },
+                yAxis: {
+                    title: {
+                        text: 'Amount ($)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>${point.y:,.0f}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Income',
+                    data: [@string.Join(",", monthlyTrendData.Take(6).Select(m => m.Income))],
+                    color: '#65da41'
+                }, {
+                    name: 'Expenses',
+                    data: [@string.Join(",", monthlyTrendData.Take(6).Select(m => m.Expense))],
+                    color: '#ff4e48'
+                }]
+            });
+            
+            // Balance Chart
+            Highcharts.chart('balanceChart', {
+                chart: {
+                    type: 'area'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: [@Html.Raw(string.Join(",", monthlyTrendData.Select(m => $"'{m.Month}'")))],
+                    crosshair: true
+                },
+                yAxis: {
+                    title: {
+                        text: 'Balance ($)'
+                    }
+                },
+                tooltip: {
+                    valuePrefix: '$'
+                },
+                plotOptions: {
+                    area: {
+                        fillOpacity: 0.5
+                    }
+                },
+                series: [{
+                    name: 'Balance',
+                    data: [@string.Join(",", monthlyTrendData.Select(m => m.Balance))],
+                    color: '#4a90e2',
+                    negativeColor: '#ff4e48'
+                }]
+            });
+            </text>
+        }
+    </script>
+}

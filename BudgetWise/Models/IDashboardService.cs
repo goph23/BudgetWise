@@ -14,6 +14,15 @@ namespace BudgetWise.Models
         Task<List<BubbleChartData>> GetBubbleChartData();
         Task<List<MonthlyTrendData>> GetMonthlyTrendChartData();
         Task<List<object>> GetStackedAreaChartData();
+        
+        // New budget metrics
+        Task<BudgetMetrics> GetDailyBudgetMetrics();
+        Task<BudgetMetrics> GetMonthlyBudgetMetrics();
+        Task<BudgetMetrics> GetYearlyBudgetMetrics();
+        Task<List<CategoryExpense>> GetTopExpenseCategories();
+        Task<decimal> GetSavingsRate();
+        Task<List<ExpenseBreakdown>> GetExpenseBreakdown();
+        Task<List<RecentTransaction>> GetRecentTransactions();
     }
 
     public class MonthlyTrendData
@@ -38,5 +47,42 @@ namespace BudgetWise.Models
         public string type;
         public int amount;
         public int size;
+    }
+    
+    public class BudgetMetrics
+    {
+        public decimal Income { get; set; }
+        public decimal Expense { get; set; }
+        public decimal Balance { get; set; }
+        public decimal AverageExpense { get; set; }
+        public decimal AverageIncome { get; set; }
+        public string Period { get; set; }
+        public int TransactionCount { get; set; }
+    }
+    
+    public class CategoryExpense
+    {
+        public string CategoryName { get; set; }
+        public string Icon { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Percentage { get; set; }
+        public int TransactionCount { get; set; }
+    }
+    
+    public class ExpenseBreakdown
+    {
+        public string Category { get; set; }
+        public decimal Amount { get; set; }
+        public string Icon { get; set; }
+    }
+    
+    public class RecentTransaction
+    {
+        public DateTime Date { get; set; }
+        public string CategoryName { get; set; }
+        public string Icon { get; set; }
+        public decimal Amount { get; set; }
+        public string Type { get; set; }
+        public string Note { get; set; }
     }
 }

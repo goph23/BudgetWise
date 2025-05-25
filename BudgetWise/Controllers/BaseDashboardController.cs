@@ -25,6 +25,15 @@ namespace BudgetWise.Controllers
             ViewBag.BubbleChartData = await dashboardService.GetBubbleChartData() ?? new List<BubbleChartData>();
             ViewBag.StackedColumnChartData = await dashboardService.GetStackedColumnChartData() ?? new List<object>();
             ViewBag.StackedAreaChartData = await dashboardService.GetStackedAreaChartData() ?? new List<object>();
+            
+            // New budget metrics
+            ViewBag.DailyBudgetMetrics = await dashboardService.GetDailyBudgetMetrics();
+            ViewBag.MonthlyBudgetMetrics = await dashboardService.GetMonthlyBudgetMetrics();
+            ViewBag.YearlyBudgetMetrics = await dashboardService.GetYearlyBudgetMetrics();
+            ViewBag.TopExpenseCategories = await dashboardService.GetTopExpenseCategories();
+            ViewBag.SavingsRate = await dashboardService.GetSavingsRate();
+            ViewBag.ExpenseBreakdown = await dashboardService.GetExpenseBreakdown();
+            ViewBag.RecentTransactions = await dashboardService.GetRecentTransactions();
         }
     }
 }

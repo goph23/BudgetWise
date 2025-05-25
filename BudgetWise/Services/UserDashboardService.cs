@@ -318,5 +318,165 @@ namespace BudgetWise.Services
 
             return stackedAreaChartData.Cast<object>().ToList();
         }
+        
+        public async Task<BudgetMetrics> GetDailyBudgetMetrics()
+        {
+            var today = DateTime.Today;
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date.Date == today)
+                .ToListAsync();
+                
+            var income = transactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = transactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            
+            return new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = expense,
+                AverageIncome = income,
+                Period = "Today",
+                TransactionCount = transactions.Count
+            };
+        }
+        
+        public async Task<BudgetMetrics> GetMonthlyBudgetMetrics()
+        {
+            var startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date >= startDate && t.Date <= endDate)
+                .ToListAsync();
+                
+            var income = transactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = transactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            var daysInMonth = DateTime.DaysInMonth(startDate.Year, startDate.Month);
+            var daysPassed = (DateTime.Today - startDate).Days + 1;
+            
+            return new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = daysPassed > 0 ? expense / daysPassed : 0,
+                AverageIncome = daysPassed > 0 ? income / daysPassed : 0,
+                Period = startDate.ToString("MMMM yyyy"),
+                TransactionCount = transactions.Count
+            };
+        }
+        
+        public async Task<BudgetMetrics> GetYearlyBudgetMetrics()
+        {
+            var startDate = new DateTime(DateTime.Today.Year, 1, 1);
+            var endDate = new DateTime(DateTime.Today.Year, 12, 31);
+            
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date >= startDate && t.Date <= endDate)
+                .ToListAsync();
+                
+            var income = transactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = transactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            var daysPassed = (DateTime.Today - startDate).Days + 1;
+            
+            return new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = daysPassed > 0 ? expense / daysPassed : 0,
+                AverageIncome = daysPassed > 0 ? income / daysPassed : 0,
+                Period = startDate.Year.ToString(),
+                TransactionCount = transactions.Count
+            };
+        }
+        
+        public async Task<List<CategoryExpense>> GetTopExpenseCategories()
+        {
+            var startDate = DateTime.Today.AddDays(-30);
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date >= startDate && t.Category.Type == "Expense")
+                .ToListAsync();
+                
+            var totalExpense = transactions.Sum(t => t.Amount);
+            
+            var topCategories = transactions
+                .GroupBy(t => new { t.Category.CategoryId, t.Category.Title, t.Category.Icon })
+                .Select(g => new CategoryExpense
+                {
+                    CategoryName = g.Key.Title,
+                    Icon = g.Key.Icon,
+                    Amount = g.Sum(t => t.Amount),
+                    Percentage = totalExpense > 0 ? (g.Sum(t => t.Amount) * 100m / totalExpense) : 0,
+                    TransactionCount = g.Count()
+                })
+                .OrderByDescending(c => c.Amount)
+                .Take(5)
+                .ToList();
+                
+            return topCategories;
+        }
+        
+        public async Task<decimal> GetSavingsRate()
+        {
+            var startDate = DateTime.Today.AddMonths(-1);
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date >= startDate)
+                .ToListAsync();
+                
+            var income = transactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = transactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            
+            if (income == 0) return 0;
+            
+            var savings = income - expense;
+            return Math.Round((savings * 100m) / income, 1);
+        }
+        
+        public async Task<List<ExpenseBreakdown>> GetExpenseBreakdown()
+        {
+            var startDate = DateTime.Today.AddDays(-30);
+            var transactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId && t.Date >= startDate && t.Category.Type == "Expense")
+                .GroupBy(t => new { t.Category.Title, t.Category.Icon })
+                .Select(g => new ExpenseBreakdown
+                {
+                    Category = g.Key.Title,
+                    Icon = g.Key.Icon,
+                    Amount = g.Sum(t => t.Amount)
+                })
+                .ToListAsync();
+                
+            return transactions;
+        }
+        
+        public async Task<List<RecentTransaction>> GetRecentTransactions()
+        {
+            var recentTransactions = await _context.Transactions
+                .Include(x => x.Category)
+                .Where(t => t.UserId == _userId)
+                .OrderByDescending(t => t.Date)
+                .ThenByDescending(t => t.TransactionId)
+                .Take(5)
+                .Select(t => new RecentTransaction
+                {
+                    Date = t.Date,
+                    CategoryName = t.Category.Title,
+                    Icon = t.Category.Icon,
+                    Amount = t.Amount,
+                    Type = t.Category.Type,
+                    Note = t.Note ?? ""
+                })
+                .ToListAsync();
+                
+            return recentTransactions;
+        }
     }
 }

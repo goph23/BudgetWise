@@ -536,5 +536,154 @@ namespace BudgetWise.Services
         }
 
         #endregion
+        
+        public Task<BudgetMetrics> GetDailyBudgetMetrics()
+        {
+            var today = DateTime.Today;
+            var todayTransactions = _demoTransactions.Where(t => t.Date.Date == today).ToList();
+            
+            var income = todayTransactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = todayTransactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            
+            return Task.FromResult(new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = expense,
+                AverageIncome = income,
+                Period = "Today",
+                TransactionCount = todayTransactions.Count
+            });
+        }
+        
+        public Task<BudgetMetrics> GetMonthlyBudgetMetrics()
+        {
+            var startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+            
+            var monthTransactions = _demoTransactions
+                .Where(t => t.Date >= startDate && t.Date <= endDate)
+                .ToList();
+                
+            var income = monthTransactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = monthTransactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            var daysPassed = (DateTime.Today - startDate).Days + 1;
+            
+            return Task.FromResult(new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = daysPassed > 0 ? expense / daysPassed : 0,
+                AverageIncome = daysPassed > 0 ? income / daysPassed : 0,
+                Period = startDate.ToString("MMMM yyyy"),
+                TransactionCount = monthTransactions.Count
+            });
+        }
+        
+        public Task<BudgetMetrics> GetYearlyBudgetMetrics()
+        {
+            var startDate = new DateTime(DateTime.Today.Year, 1, 1);
+            var endDate = new DateTime(DateTime.Today.Year, 12, 31);
+            
+            var yearTransactions = _demoTransactions
+                .Where(t => t.Date >= startDate && t.Date <= endDate)
+                .ToList();
+                
+            var income = yearTransactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = yearTransactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            var daysPassed = (DateTime.Today - startDate).Days + 1;
+            
+            return Task.FromResult(new BudgetMetrics
+            {
+                Income = income,
+                Expense = expense,
+                Balance = income - expense,
+                AverageExpense = daysPassed > 0 ? expense / daysPassed : 0,
+                AverageIncome = daysPassed > 0 ? income / daysPassed : 0,
+                Period = startDate.Year.ToString(),
+                TransactionCount = yearTransactions.Count
+            });
+        }
+        
+        public Task<List<CategoryExpense>> GetTopExpenseCategories()
+        {
+            var startDate = DateTime.Today.AddDays(-30);
+            var recentExpenses = _demoTransactions
+                .Where(t => t.Date >= startDate && t.Category?.Type == "Expense")
+                .ToList();
+                
+            var totalExpense = recentExpenses.Sum(t => t.Amount);
+            
+            var topCategories = recentExpenses
+                .GroupBy(t => new { t.Category.CategoryId, t.Category.Title, t.Category.Icon })
+                .Select(g => new CategoryExpense
+                {
+                    CategoryName = g.Key.Title,
+                    Icon = g.Key.Icon,
+                    Amount = g.Sum(t => t.Amount),
+                    Percentage = totalExpense > 0 ? (g.Sum(t => t.Amount) * 100m / totalExpense) : 0,
+                    TransactionCount = g.Count()
+                })
+                .OrderByDescending(c => c.Amount)
+                .Take(5)
+                .ToList();
+                
+            return Task.FromResult(topCategories);
+        }
+        
+        public Task<decimal> GetSavingsRate()
+        {
+            var startDate = DateTime.Today.AddMonths(-1);
+            var recentTransactions = _demoTransactions
+                .Where(t => t.Date >= startDate)
+                .ToList();
+                
+            var income = recentTransactions.Where(t => t.Category?.Type == "Income").Sum(t => t.Amount);
+            var expense = recentTransactions.Where(t => t.Category?.Type == "Expense").Sum(t => t.Amount);
+            
+            if (income == 0) return Task.FromResult(0m);
+            
+            var savings = income - expense;
+            return Task.FromResult(Math.Round((savings * 100m) / income, 1));
+        }
+        
+        public Task<List<ExpenseBreakdown>> GetExpenseBreakdown()
+        {
+            var startDate = DateTime.Today.AddDays(-30);
+            var expenseBreakdown = _demoTransactions
+                .Where(t => t.Date >= startDate && t.Category?.Type == "Expense")
+                .GroupBy(t => new { t.Category.Title, t.Category.Icon })
+                .Select(g => new ExpenseBreakdown
+                {
+                    Category = g.Key.Title,
+                    Icon = g.Key.Icon,
+                    Amount = g.Sum(t => t.Amount)
+                })
+                .ToList();
+                
+            return Task.FromResult(expenseBreakdown);
+        }
+        
+        public Task<List<RecentTransaction>> GetRecentTransactions()
+        {
+            var recentTransactions = _demoTransactions
+                .OrderByDescending(t => t.Date)
+                .ThenByDescending(t => t.TransactionId)
+                .Take(5)
+                .Select(t => new RecentTransaction
+                {
+                    Date = t.Date,
+                    CategoryName = t.Category.Title,
+                    Icon = t.Category.Icon,
+                    Amount = t.Amount,
+                    Type = t.Category.Type,
+                    Note = t.Note ?? ""
+                })
+                .ToList();
+                
+            return Task.FromResult(recentTransactions);
+        }
     }
 }
