@@ -323,8 +323,8 @@
 
     <!-- Recent Activity Tab -->
     <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
-        <div class="widget">
-            <h5 class="mb-4">Recent Transactions</h5>
+        <div class="widget p-2">
+            <h5 class="mt-4 mb-4">Recent Transactions</h5>
             @if (recentTransactions != null && recentTransactions.Any())
             {
                 <div class="transaction-list">
@@ -348,7 +348,7 @@
                         </div>
                     }
                 </div>
-                <div class="text-center mt-4">
+                <div class="text-center mt-4 mb-4">
                     <a href="/Transaction" class="btn btn-outline-primary">View All Transactions</a>
                 </div>
             }

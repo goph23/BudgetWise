@@ -11,58 +11,80 @@
                 <div class="text-center mb-4">
                     <img src="~/logo.png" alt="BudgetWise Logo" class="img-fluid mb-3" style="max-width: 120px;">
                     <h2 class="fw-bold">Welcome to BudgetWise</h2>
-                    <p class="lead text-muted">Your Personal Financial Management Solution</p>
+                    <p class="lead text-muted">Your Smart Personal Finance Tracker</p>
                 </div>
 
                 <div class="mb-5">
                     <h4 class="mb-3">What is BudgetWise?</h4>
-                    <p>BudgetWise is a simple, intuitive web application designed to help you take control of your personal finances. Whether you're saving for a big purchase, planning for the future, or just trying to understand where your money goes each month, BudgetWise provides the tools you need to make informed financial decisions.</p>
+                    <p>BudgetWise is a modern, intuitive financial management application that helps you understand and control your personal finances. Built with ASP.NET Core and powered by Azure SQL Database, BudgetWise provides real-time insights into your spending habits, savings rate, and financial health through beautiful visualizations and comprehensive budget tracking.</p>
                 </div>
 
                 <div class="mb-5">
-                    <h4 class="mb-3">Features</h4>
+                    <h4 class="mb-3">Key Features</h4>
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-chart-pie fs-3 text-success me-3"></i>
+                                    <i class="fa-solid fa-chart-line fs-3 text-success me-3"></i>
                                 </div>
                                 <div>
-                                    <h5>Visual Dashboard</h5>
-                                    <p>See your financial data come to life with interactive charts showing expense categories, income vs. spending, and trends over time.</p>
+                                    <h5>Advanced Dashboard</h5>
+                                    <p>Interactive tabbed dashboard with daily, monthly, and yearly budget insights. Track your financial metrics with beautiful Highcharts visualizations.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-tags fs-3 text-primary me-3"></i>
+                                    <i class="fa-solid fa-calculator fs-3 text-primary me-3"></i>
                                 </div>
                                 <div>
-                                    <h5>Customizable Categories</h5>
-                                    <p>Create and manage your own spending categories with emoji icons to quickly identify different types of transactions.</p>
+                                    <h5>Budget Insights</h5>
+                                    <p>Monitor your daily, monthly, and yearly budgets with detailed metrics including average spending, savings rate, and balance tracking.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-wallet fs-3 text-warning me-3"></i>
+                                    <i class="fa-solid fa-tags fs-3 text-warning me-3"></i>
                                 </div>
                                 <div>
-                                    <h5>Transaction Tracking</h5>
-                                    <p>Easily record your income and expenses with a simple interface that helps you stay on top of your financial activity.</p>
+                                    <h5>Smart Categories</h5>
+                                    <p>Create custom spending categories with emoji icons. Track expenses by category and see your top spending areas at a glance.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
-                                    <i class="fa-solid fa-chart-line fs-3 text-info me-3"></i>
+                                    <i class="fa-solid fa-receipt fs-3 text-info me-3"></i>
                                 </div>
                                 <div>
-                                    <h5>Financial Insights</h5>
-                                    <p>Gain valuable insights into your spending patterns with reports that show your financial health over days, weeks, and months.</p>
+                                    <h5>Transaction Management</h5>
+                                    <p>Easily add, edit, and categorize transactions. View recent activity and search through your financial history with powerful filtering.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fa-solid fa-piggy-bank fs-3 text-danger me-3"></i>
+                                </div>
+                                <div>
+                                    <h5>Savings Tracking</h5>
+                                    <p>Monitor your savings rate and get insights on whether you're saving enough. Visual indicators help you stay on track with your financial goals.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fa-solid fa-file-export fs-3 text-secondary me-3"></i>
+                                </div>
+                                <div>
+                                    <h5>Export Reports</h5>
+                                    <p>Export your financial data and reports for external analysis or record-keeping. Keep your financial records organized and accessible.</p>
                                 </div>
                             </div>
                         </div>
@@ -70,38 +92,89 @@
                 </div>
 
                 <div class="mb-5">
-                    <h4 class="mb-3">How It Works</h4>
+                    <h4 class="mb-3">Dashboard Features</h4>
+                    <p>Our redesigned dashboard provides comprehensive financial insights through four main sections:</p>
+                    <ul class="list-unstyled ms-4">
+                        <li class="mb-3">
+                            <i class="fa-solid fa-chart-pie text-success me-2"></i> 
+                            <strong>Overview Tab</strong> - Summary metrics, expense breakdown pie chart, and top spending categories with visual progress bars
+                        </li>
+                        <li class="mb-3">
+                            <i class="fa-solid fa-calculator text-primary me-2"></i> 
+                            <strong>Budget Insights Tab</strong> - Daily, monthly, and yearly budget breakdowns with average spending calculations and savings rate analysis
+                        </li>
+                        <li class="mb-3">
+                            <i class="fa-solid fa-chart-line text-warning me-2"></i> 
+                            <strong>Trends Tab</strong> - Income vs expenses trend lines, monthly comparisons, and balance tracking over time
+                        </li>
+                        <li class="mb-3">
+                            <i class="fa-solid fa-list text-info me-2"></i> 
+                            <strong>Recent Activity Tab</strong> - Latest transactions with category icons, amounts, and quick access to transaction history
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mb-5">
+                    <h4 class="mb-3">How to Get Started</h4>
                     <ol class="list-group list-group-numbered mb-4">
                         <li class="list-group-item bg-transparent border-0 ps-0">
-                            <strong>Create Categories</strong> - Set up categories with emoji icons for easy identification.
+                            <strong>Create an Account</strong> - Register with your email to secure your financial data
                         </li>
                         <li class="list-group-item bg-transparent border-0 ps-0">
-                            <strong>Record Transactions</strong> - Track your income and expenses as they happen.
+                            <strong>Set Up Categories</strong> - Create income and expense categories with emoji icons
                         </li>
                         <li class="list-group-item bg-transparent border-0 ps-0">
-                            <strong>View Your Dashboard</strong> - See visual charts of your spending patterns.
+                            <strong>Add Transactions</strong> - Record your daily income and expenses
                         </li>
                         <li class="list-group-item bg-transparent border-0 ps-0">
-                            <strong>Make Informed Decisions</strong> - Use insights to improve your financial habits.
+                            <strong>Monitor Your Dashboard</strong> - Track your financial health with real-time insights
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <strong>Analyze Trends</strong> - Use the data to make informed financial decisions
                         </li>
                     </ol>
                 </div>
 
+                <div class="mb-5">
+                    <h4 class="mb-3">Technology Stack</h4>
+                    <p>BudgetWise is built with modern, reliable technologies:</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled ms-4">
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> ASP.NET Core 8.0</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Entity Framework Core</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Azure SQL Database</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> ASP.NET Core Identity</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled ms-4">
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Highcharts.js</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Bootstrap 5</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Font Awesome Icons</li>
+                                <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> Responsive Design</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mb-4">
-                    <h4 class="mb-3">Visualizations</h4>
-                    <p>BudgetWise provides a comprehensive financial overview through various charts:</p>
-                    <ul class="list-unstyled ms-4">
-                        <li class="mb-2"><i class="fa-solid fa-square-check text-success me-2"></i> <strong>Category Breakdown</strong> - Treemap showing your spending by category</li>
-                        <li class="mb-2"><i class="fa-solid fa-square-check text-success me-2"></i> <strong>Income vs. Expenses</strong> - Bar charts comparing money in and money out</li>
-                        <li class="mb-2"><i class="fa-solid fa-square-check text-success me-2"></i> <strong>Monthly Trends</strong> - Line charts tracking your financial patterns over time</li>
-                        <li class="mb-2"><i class="fa-solid fa-square-check text-success me-2"></i> <strong>Transaction Activity</strong> - Bubble chart displaying transaction frequency</li>
-                    </ul>
+                    <h4 class="mb-3">Demo Mode</h4>
+                    <p>Want to explore BudgetWise before creating an account? Check out our demo dashboard with sample data to see all features in action. The demo provides a full preview of the dashboard, categories, transactions, and reporting capabilities.</p>
+                    <div class="text-center my-3">
+                        <a href="/DemoDashboard" class="btn btn-primary">
+                            <i class="fa-solid fa-play me-2"></i> Try Demo Dashboard
+                        </a>
+                    </div>
                 </div>
 
                 <div class="text-center mt-5">
-                    <p>BudgetWise is an open-source project. View the source code or contribute on GitHub:</p>
-                    <a href="https://github.com/taylor-js/BudgetWise" target="_blank" class="btn btn-outline-primary">
-                        <i class="fa-solid fa-code-branch me-2"></i> GitHub Repository
+                    <p class="mb-3">BudgetWise is an open-source project. View the source code, report issues, or contribute on GitHub:</p>
+                    <a href="https://github.com/taylor-js/BudgetWise" target="_blank" class="btn btn-outline-primary me-2">
+                        <i class="fa-brands fa-github me-2"></i> GitHub Repository
+                    </a>
+                    <a href="https://github.com/taylor-js/BudgetWise/issues" target="_blank" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-bug me-2"></i> Report an Issue
                     </a>
                 </div>
             </div>
